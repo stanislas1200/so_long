@@ -1,0 +1,9 @@
+/* XPM */
+static char *arr[] = {
+/* width height ncolors chars_per_pixel */
+"1 1 1 2",
+/* colors */
+"x c #FFFFFF ",
+/* pixels */
+"x",
+};
