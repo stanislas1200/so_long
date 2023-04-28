@@ -1,6 +1,5 @@
 #include "so_long.h"
 
-
 void print_map(char **map, int x, int y)
 {
     int i = 0;
@@ -31,12 +30,14 @@ void propagate(char **map, int *start, int *end, t_data *data, t_propagation_dat
     if (start[0] == end[0] && start[1] == end[1])
     {
         data->reachable_end = 1;
-        while(new_data->parent)
+        t_propagation_data *current = new_data;
+        while (current->parent)
         {
-            map[new_data->y][new_data->x] = 'A';
-            new_data = new_data->parent;
+            map[current->y][current->x] = 'A';
+            current = current->parent;
         }
         print_map(map, start[0], start[1]);
+        free(new_data);
         return;
     }
     if (map[start[1]][start[0]] == '0' || map[start[1]][start[0]] == 'C' || map[start[1]][start[0]] == 'E' || map[start[1]][start[0]] == 'P')
@@ -57,4 +58,6 @@ void propagate(char **map, int *start, int *end, t_data *data, t_propagation_dat
             i++;
         }
     }
+    free(new_data);
 }
+

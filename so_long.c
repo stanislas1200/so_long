@@ -355,6 +355,10 @@ int	main(int ac, char **av)
 				else
 					printf("\x1b[1;31mError \x1b[0m: Can't acces exit !\n");
 		int i = 0;
+		if (data->player_possition)
+			free(data->player_possition);
+		if (data->exit_possition)
+			free(data->exit_possition);
 		while(data->map && data->map[i])
 		{
 			free(data->map[i]);
