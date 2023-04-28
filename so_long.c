@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-//#include "so_long.h"
-#include <stdio.h>
+#include "so_long.h"
+
 typedef struct s_data
 {
 	void	*img;
@@ -30,24 +30,124 @@ void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 	*(unsigned int*)dst = color;
 }
 
+char **split_lines(char *all_line, int len)
+{
+    int i;
+	int j;
+	int tab_size;
+    char **tab;
+
+	i = 0;
+	tab_size = 0;
+	while (all_line[i])
+	{
+		if (all_line[i] == '\n')
+			tab_size++;
+		i++;
+	}
+	tab = malloc(sizeof(char *) * (tab_size + 2));
+	if (!tab)
+		return (NULL);
+	i = 0;
+	tab[tab_size + 1] = NULL;
+	j = 0;
+	tab[i] = malloc(sizeof(char) * len + 2); 
+	while (*all_line)
+	{
+		tab[i][j++] = *all_line++;
+		if (*all_line == '\n')
+		{
+			tab[i][j] = '\0';
+			i++;
+			j = 0;
+			tab[i] = malloc(sizeof(char) * len + 2);
+			all_line++;
+		}
+	}
+    return tab;
+}
+
+/*Check the map file and set the map*/
+void	check_map(char *path, char ***map, t_data *data)
+{
+	int		i;
+	int		j;
+	int		k;
+	int	fd;
+
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
+	{
+		char *new_path;
+		new_path = ft_strjoin("./data/map/", path);
+		fd = open(new_path, O_RDONLY);
+		free(new_path);
+		if (fd == -1)
+		{
+			perror("\x1b[1;31mError\x1b[0m");
+			free(data);
+			exit(1);
+		}
+	}
+
+	char *line = NULL;
+	char *all_line;
+	char* tmp = NULL;
+	line = get_next_line(fd);
+	if (!line)
+	{
+		printf("\x1b[1;31mError \x1b[0m: Map is empty !\n");
+		free(data);
+		exit(1);
+	}
+	i = ft_strlen(line);
+	j = 0;
+	all_line = ft_strjoin("", line);
+	while (line)
+	{
+		k = ft_strlen(line);
+		free(line);
+		line = get_next_line(fd);
+		if (!line)
+			i -= 2;
+		else {
+			tmp = ft_strjoin(all_line, line);
+			free(all_line);
+			all_line = tmp;
+			}
+		if (i != k)
+		{
+			printf("\x1b[1;31mError \x1b[0m: Map line \x1b[1;35m%d and %d\x1b[0m doesn't have the same lenght !\n", j - 1, j - 2);
+			free(all_line);
+			free(data);
+			exit(1);
+		}
+		
+		j++;
+	}
+	printf("\nAll line : \n%s\n", all_line);
+	*map = split_lines(all_line, i);
+	free(all_line);
+}
+
 int	main(int ac, char **av)
 {
-	void	*mlx;
-	void	*mlx_win;
-	t_data	*img;
+	// void	*mlx;
+	// void	*mlx_win;
+	t_data	*data;
 	// char *path = "./test.xpm";
-	int		img_width;
-	int		img_height;
+	// int		img_width;
+	// int		img_height;
 
-	img = malloc(50);
+	data = malloc(sizeof(t_data));
 
 	// img_height = 1;
 	// img_width = 1;
 
 	/*init mlx*/
-	mlx = mlx_init();
+	// mlx = mlx_init();
 	/*create window*/
-	mlx_win = mlx_new_window(mlx, 192, 108, "so_long");
+	// mlx_win = mlx_new_window(mlx, 192, 108, "so_long");
 
 	// img->img = mlx_new_image(mlx, 192, 108);
 	// /*file to img*/
@@ -61,22 +161,29 @@ int	main(int ac, char **av)
 	// // 	my_mlx_pixel_put(img, 5, 5 + x, 0x0000FF00);
 
 	/*Get Image from file*/
-	img->img = mlx_xpm_file_to_image(mlx, "floor.xpm", &img_width, &img_height);
+	// data->img = mlx_xpm_file_to_image(mlx, "floor.xpm", &img_width, &img_height);
 	/*Put img to window*/
-	mlx_put_image_to_window(mlx, mlx_win, img->img, 20, 20);
+	// mlx_put_image_to_window(mlx, mlx_win, data->img, 20, 20);
 	/*Loop*/
-	mlx_loop(mlx);
+	// mlx_loop(mlx);
 
 	// // printf("%s\n", av[0]);
 	if (ac == 2)
 	{
-		printf("\033[1;31m%s \033[0m\n", av[1]);
+		check_map(av[1], &data->map, data);
 	}
 	else
-		printf("\x1b[33mWarning :\033[0m No Map!\n");
+		printf("\x1b[33mWarning :\x1b[0m No Map!\n");
 	// mlx_destroy_window(mlx, mlx_win);
 	// free(mlx);
-	(void)av;
+	int i = 0;
+	while(data->map[i])
+	{
+		free(data->map[i]);
+		i++;
+	}
+	free(data->map);
+	free(data);
 	return (0);
 }
 
