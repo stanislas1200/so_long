@@ -6,19 +6,11 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/26 17:02:41 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/04/29 17:32:25 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-// void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-// {
-// 	char	*dst;
-
-// 	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-// 	*(unsigned int*)dst = color;
-// }
 
 /**
  * Splits a string into an array of strings, with each string corresponding to a line
@@ -33,10 +25,10 @@
  */
 char **split_lines(char *all_line, int len)
 {
-    int i;
+	int i;
 	int j;
 	int tab_size;
-    char **tab;
+	char **tab;
 
 	i = 0;
 	tab_size = 0;
@@ -68,7 +60,7 @@ char **split_lines(char *all_line, int len)
 		}
 	}
 	tab[i][j] = '\0';
-    return tab;
+	return tab;
 }
 
 /**
@@ -156,7 +148,7 @@ char *read_file(int fd, t_data *data)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 2;
+			i -= 1; // -2 on windows
 		else
 		{
 			tmp = ft_strjoin(all_line, line);
@@ -173,7 +165,6 @@ char *read_file(int fd, t_data *data)
 	}
 	data->map_width = k;
 	data->map_height = j;
-	printf("Map height : %d\n", data->map_height);
 	return all_line;
 }
 
@@ -189,6 +180,7 @@ void set_map_from_file(char *path, char ***map, t_data *data)
 {
 	int	fd;
 	char *all_line;
+	char *line_copy;
 	/*Try open map*/
 	fd = open_file(path);
 	if (fd == -1)
@@ -205,8 +197,17 @@ void set_map_from_file(char *path, char ***map, t_data *data)
 		exit(1);
 	}
 	/*Try split map*/
-	printf("\nAll line : \n%s\n len : %d\n", all_line, data->map_width);
-	*map = split_lines(all_line, data->map_width);
+	// printf("\nAll line : \n%s\n len : %d\n", all_line, data->map_width);
+	int i = -1;
+	while (all_line[++i]);
+	line_copy = malloc(i + 1);
+	i = -1;
+	while (all_line[++i])
+		line_copy[i] = all_line[i];
+	
+	data->map = split_lines(all_line, data->map_width);
+	data->map_copy = split_lines(line_copy, data->map_width);
+	(void)map;
 	free(all_line);
 }
 
@@ -244,6 +245,78 @@ int check_common_errors(t_data *data) {
 	return (1);
 }
 
+int				key_press(int keycode, t_data *data)
+{
+	if (data->map_copy[data->player_possition[1]][data->player_possition[0]] != 'E')
+		mlx_put_image_to_window(data->mlx, data->win, data->floor, data->player_possition[0] * 50, data->player_possition[1] * 50);
+	if (keycode == 13 || keycode == 126) // UP
+		{
+			if (data->map_copy[data->player_possition[1] - 1][data->player_possition[0]] != '1')
+			data->player_possition[1]--;
+			printf("up\n");}
+	else if (keycode == 1 || keycode == 125) // down
+		{
+			if (data->map_copy[data->player_possition[1] + 1][data->player_possition[0]] != '1')
+			data->player_possition[1]++;
+			printf("down\n");}
+	else if (keycode == 12 || keycode == 123) // left
+		{
+			if (data->map_copy[data->player_possition[1]][data->player_possition[0] - 1] != '1')
+			data->player_possition[0]--;
+			printf("left\n");}
+	else if (keycode == 2 || keycode == 124) // right
+		{
+			if (data->map_copy[data->player_possition[1]][data->player_possition[0] + 1] != '1')
+			data->player_possition[0]++;
+			printf("right\n");}
+	
+	mlx_put_image_to_window(data->mlx, data->win, data->player_image, data->player_possition[0] * 50, data->player_possition[1] * 50);
+	mlx_string_put(data->mlx, data->win, 10, 10, 136, "collected z/a");
+	printf("player x: %d, y: %d ", data->player_possition[0], data->player_possition[1]);
+	return (0);
+}
+
+void draw_map(t_data *data)
+{
+
+	void	*wall;
+	void	*coll;
+	void	*exit_tile;
+
+	data->mlx = mlx_init();
+	printf("height : %d\nwidth : %d\n", data->map_height, data->map_width);
+	data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * data->map_height, "my_mlx");
+	data->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/floor.xpm", &data->map_width, &data->map_height);
+	wall = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall.xpm", &data->map_width, &data->map_height);
+	coll = mlx_xpm_file_to_image(data->mlx, "./data/texture/collectible.xpm", &data->map_width, &data->map_height);
+	exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/exit.xpm", &data->map_width, &data->map_height);
+	data->player_image = mlx_xpm_file_to_image(data->mlx, "./data/texture/player.xpm", &data->map_width, &data->map_height);
+	int i = -1;
+	int j = 0;
+	while (data->map_copy[++i])
+	{
+		j = -1;
+		while (data->map_copy[i][++j])
+			if (data->map_copy[i][j] == '1')
+				mlx_put_image_to_window(data->mlx, data->win, wall, j * 50, i * 50);
+			else if (data->map_copy[i][j] == 'C')
+				mlx_put_image_to_window(data->mlx, data->win, coll, j * 50, i * 50);
+			else if (data->map_copy[i][j] == 'P')
+			{
+				mlx_put_image_to_window(data->mlx, data->win, data->floor, j * 50, i * 50);
+				mlx_put_image_to_window(data->mlx, data->win, data->player_image, j * 50, i * 50);
+				data->player_possition[0] = j;
+				data->player_possition[1] = i;
+			}
+			else if (data->map_copy[i][j] == '0')
+				mlx_put_image_to_window(data->mlx, data->win, data->floor, j * 50, i * 50);
+			else if (data->map_copy[i][j] == 'E')
+				mlx_put_image_to_window(data->mlx, data->win, exit_tile, j * 50, i * 50);
+	}
+	mlx_hook(data->win, 2, 0, &key_press, data);
+	mlx_loop(data->mlx);
+}
+
 /**
  * Check for common errors in the game map.
  *
@@ -256,8 +329,8 @@ int check_common_errors(t_data *data) {
  */
 int check_map_tiles(t_data *data)
 {
-	int i;
-	int j;
+	int	i;
+	int	j;
 
 	i = 0;
 	data->player_nbr = 0;
@@ -285,9 +358,9 @@ int check_map_tiles(t_data *data)
 			else if (data->map[i][j] == 'C')
 				data->collectible_nbr++;
 			if (data->player_nbr > 1)
-				break;
+				break ;
 			if (data->exit_nbr > 1)
-				break;
+				break ;
 			j++;
 		}
 		if (check_line_char(data->map[i], i, 0) == 0)
@@ -301,168 +374,40 @@ int check_map_tiles(t_data *data)
 	return (1);
 }
 
-int	find_path(t_data *data)
-{
-
-}
-
 int	main(int ac, char **av)
 {
-	// void	*mlx;
-	// void	*mlx_win;
 	t_data	*data;
-	// char *path = "./test.xpm";
-	// int		img_width;
-	// int		img_height;
-
 	data = malloc(sizeof(t_data));
-
-	// img_height = 1;
-	// img_width = 1;
-
-	/*init mlx*/
-	// mlx = mlx_init();
-	/*create window*/
-	// mlx_win = mlx_new_window(mlx, 192, 108, "so_long");
-
-	// img->img = mlx_new_image(mlx, 192, 108);
-	// /*file to img*/
-	// if (!img)
-	// 	printf("ERROR\n");
-	// /*get img data*/
-	// //mg->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length, &(img->endian));
-	// /*put pixel to img*/
-	// // int x = -1;
-	// // while (++x < 40)
-	// // 	my_mlx_pixel_put(img, 5, 5 + x, 0x0000FF00);
-
-	/*Get Image from file*/
-	// data->img = mlx_xpm_file_to_image(mlx, "floor.xpm", &img_width, &img_height);
-	/*Put img to window*/
-	// mlx_put_image_to_window(mlx, mlx_win, data->img, 20, 20);
-	/*Loop*/
-	// mlx_loop(mlx);
-
-	// // printf("%s\n", av[0]);
+	data->printed = 0;
 	if (ac == 2)
 	{
 		set_map_from_file(av[1], &data->map, data);
 		if (data->map)
 			if (check_map_tiles(data))
-				propagate(data->map, data->player_possition, data->exit_possition, data, NULL);
+			{
+				propagate (data->map, data->player_possition, data->exit_possition, data, NULL);
 				if (data->reachable_end)
-					printf("\x1b[32mMap is valid !\x1b[0m\n");
+					draw_map(data);
 				else
 					printf("\x1b[1;31mError \x1b[0m: Can't acces exit !\n");
+			}
 		int i = 0;
 		if (data->player_possition)
 			free(data->player_possition);
 		if (data->exit_possition)
 			free(data->exit_possition);
-		while(data->map && data->map[i])
+		while (data->map && data->map[i])
 		{
 			free(data->map[i]);
 			i++;
 		}
 		if (data->map)
 			free(data->map);
-		}
+	}
 	else
 		printf("\x1b[33mWarning :\x1b[0m No Map!\n");
 	// mlx_destroy_window(mlx, mlx_win);
 	// free(mlx);
-	
 	free(data);
 	return (0);
 }
-
-
-/*Image*/
-
-// int main()
-// {
-// 		void *mlx;
-// 		void *win;
-// 		void *img;
-
-// 		int		img_width;
-// 		int 	img_height;
-
-// 		mlx = mlx_init();
-// 		win = mlx_new_window(mlx, 500, 500, "my_mlx");
-// 		img = mlx_xpm_file_to_image(mlx, "../textures/wall_n.xpm", &img_width, &img_height);
-// 		mlx_put_image_to_window(mlx, win, img, 50, 50);
-// 		mlx_loop(mlx);
-// 		return (0);
-// }
-
-
-
-/*Keys*/
-
-// #define X_EVENT_KEY_PRESS		2
-// #define X_EVENT_KEY_release		3
-// #define X_EVENT_KEY_EXIT		17 //exit key code
-
-// //Mac key code example
-// //All the key code example other than below is described on the site linked in READEME.md
-// #define KEY_ESC			53
-// # define KEY_Q			12
-// # define KEY_W			13
-// # define KEY_E			14
-// # define KEY_R			15
-// # define KEY_A			0
-// # define KEY_S			1
-// # define KEY_D			2
-
-// //Since key_press() can recieve only one argument, all the argument shold be gathered in one structure
-// //x,y and str are meaningless variables.
-// typedef struct s_param{
-// 	int		x;
-// 	int		y;
-// 	char	str[3];
-// }				t_param;
-
-// //Only param->x will be used. 
-// void			param_init(t_param *param)
-// {
-// 	param->x = 3;
-// 	param->y = 4;
-// 	param->str[0] = 'a';
-// 	param->str[1] = 'b';
-// 	param->str[2] = '\0';
-// }
-
-// int				key_press(int keycode, t_param *param)
-// {
-// 	static int a = 0;
-
-// 	if (keycode == KEY_W)//Action when W key pressed
-// 		param->x++;
-// 	else if (keycode == KEY_S) //Action when S key pressed
-// 		param->x--;
-// 	else if (keycode == KEY_ESC) //Quit the program when ESC key pressed
-// 		exit(0);
-// 	printf("x: %d\n", param->x);
-// 	return (0);
-// }
-
-// int			main(void)
-// {
-// 	void		*mlx;
-// 	void		*win;
-// 	t_param		param;
-
-// 	param_init(&param);
-// 	mlx = mlx_init();
-// 	win = mlx_new_window(mlx, 500, 500, "mlx_project");
-// 	printf("-------------------------------\n");
-// 	printf("'W key': Add 1 to x.\n");
-// 	printf("'S key': Subtract 1 from x\n");
-// 	printf("'ESC key': Exit this program\n");
-// 	printf("'Other keys': print current x \n");
-// 	printf("-------------------------------\n");
-// 	printf("Current x = 3\n");
-// 	mlx_hook(win, X_EVENT_KEY_PRESS, 0, &key_press, &param);
-// 	mlx_loop(mlx);
-// }

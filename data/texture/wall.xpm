@@ -1,8 +1,10 @@
 /* XPM */
-static char *result[] = {
-/* columns rows colors chars-per-pixel */
+static char *plaid[] = {
+/* plaid pixmap
+* width height ncolors chars_per_pixel */
 "50 50 1 1",
-"x c #79A230",
+/* colors */
+"x c #784822 ",
 /* pixels */
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
 "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",

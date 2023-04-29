@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/26 15:24:50 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/04/29 17:16:53 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,12 @@
 # define SO_LONG_H
 
 # include <stdio.h>
-// # include <mlx.h>
+# include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
 # include <fcntl.h>
+
+# include <string.h>
 
 typedef struct s_data
 {
@@ -27,35 +29,42 @@ typedef struct s_data
 	int		line_length;
 	int		endian;
 	char	**map;
-    int     map_width;
-    int     map_height;
-    int     collectible_nbr;
-    int     exit_nbr;
-    int     player_nbr;
-    int     *player_possition;
-    int     *exit_possition;
-    int     reachable_end;
+	char	**map_copy;
+	int     map_width;
+	int     map_height;
+	int     collectible_nbr;
+	int     exit_nbr;
+	int     player_nbr;
+	int     *player_possition;
+	void	*player_image;
+	void	*floor;
+
+	void	*mlx;
+	void	*win;
+	int     *exit_possition;
+	int     reachable_end;
+	int		printed;
 
 }	t_data;
 
 typedef struct Node {
-    int x;
-    int y;
-    int walkable;
-    int close;
+	int x;
+	int y;
+	int walkable;
+	int close;
 
-    int g;
-    int h;
-    int f;
+	int g;
+	int h;
+	int f;
 
-    struct Node* parent;
+	struct Node* parent;
 } Node;
 
 typedef struct t_propagation_data
 {
-    int x;
-    int y;
-    struct t_propagation_data *parent;
+	int x;
+	int y;
+	struct t_propagation_data *parent;
 }   t_propagation_data;
 
 
