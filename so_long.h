@@ -14,7 +14,7 @@
 # define SO_LONG_H
 
 # include <stdio.h>
-# include <mlx.h>
+// # include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
 # include <fcntl.h>
@@ -23,53 +23,44 @@
 
 typedef struct s_data
 {
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
+	/*mlx*/
+	void	*mlx;
+	void	*win;
+	/*player*/
+	int     *player_possition;
+	/*map*/
 	char	**map;
 	char	**map_copy;
 	int     map_width;
 	int     map_height;
+	/*map check*/
+	int     player_nbr;
 	int     collectible_nbr;
 	int     exit_nbr;
-	int     player_nbr;
-	int     *player_possition;
+	int     reachable_end;
+	int     *exit_possition;
+	/*img*/
 	void	*player_image;
 	void	*floor;
-
-	void	*mlx;
-	void	*win;
-	int     *exit_possition;
-	int     reachable_end;
+	void	*wall;
+	void	*coll;
+	void	*exit_tile;
+	/*dev*/
 	int		printed;
-
+	/*---*/
 }	t_data;
 
-typedef struct Node {
-	int x;
-	int y;
-	int walkable;
-	int close;
-
-	int g;
-	int h;
-	int f;
-
-	struct Node* parent;
-} Node;
-
+/*dev*/
 typedef struct t_propagation_data
 {
 	int x;
 	int y;
 	struct t_propagation_data *parent;
 }   t_propagation_data;
+/*---*/
 
-
-int *astar(char** map, int* start, int* end, int width, int height);
 void propagate(char **map, int *start, int *end, t_data *data, t_propagation_data *parent);
+void	start_game(t_data *data);
 
 
 #endif
