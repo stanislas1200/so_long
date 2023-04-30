@@ -28,6 +28,8 @@ typedef struct s_data
 	void	*win;
 	/*player*/
 	int     *player_possition;
+	int	 	collected_count;
+	int		player_move_count;
 	/*map*/
 	char	**map;
 	char	**map_copy;

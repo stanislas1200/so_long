@@ -1,5 +1,51 @@
 #include "so_long.h"
 
+#include <stdlib.h>
+#include <stdio.h>
+
+int get_len(int nbr)
+{
+    int len = 0;
+    while (nbr != 0)
+    {
+        len++;
+        nbr /= 10;
+    }
+    return (len);
+}
+
+char *ft_itoa(int nbr)
+{
+    char *str;
+    int i = get_len(nbr);
+    if (nbr <= 0)
+        i++;
+
+    str = (char *)malloc(sizeof(char) * (i + 1));
+    if (nbr < 0)
+    {
+        str[0] = '-';
+        if (nbr == -2147483648)
+        {
+            str[1] = '2';
+            nbr = 147483648;
+        }
+        else 
+            nbr *= -1;
+    }
+    str[i] = '\0';
+
+    i--;
+    if (nbr == 0)
+        str[i] = '0';
+    while (nbr != 0)
+    {
+        str[i--] = nbr % 10 + '0';
+        nbr /= 10;
+    }
+    return (str);
+}
+
 int	key_press(int keycode, t_data *data)
 {
 	int	x;
@@ -9,6 +55,11 @@ int	key_press(int keycode, t_data *data)
 	y = data->player_possition[1];
 	if (data->map_copy[y][x] == 'E')
 		mlx_put_image_to_window(data->mlx, data->win, data->exit_tile, x * 50, y * 50);
+	else if (data->map_copy[y][x] == 'C')
+	{
+		data->map_copy[y][x] = '0';
+		data->collectible_nbr--;
+	}
 	else
 		mlx_put_image_to_window(data->mlx, data->win, data->floor, x * 50, y * 50);
 	if (keycode == 13 || keycode == 126) // UP
@@ -23,8 +74,14 @@ int	key_press(int keycode, t_data *data)
 	else if (keycode == 2 || keycode == 124) // right
 		if (data->map_copy[y][x + 1] != '1')
 			data->player_possition[0]++;
+	data->player_move_count++;
 	mlx_put_image_to_window(data->mlx, data->win, data->player_image, x * 50, y * 50);
-	mlx_string_put(data->mlx, data->win, 10, 10, 136, "collected z/a");
+	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
+	mlx_string_put(data->mlx, data->win, 20, 10, 136, ft_itoa(data->player_move_count));
+	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Collected left: ");
+	mlx_string_put(data->mlx, data->win, 20, 10, 136, ft_itoa(data->collectible_nbr));
+	mlx_put_image_to_window(data->mlx, data->wall, data->player_image, 0 * 50, 0 * 50);
+	mlx_put_image_to_window(data->mlx, data->wall, data->player_image, 1 * 50, 0 * 50);
 	printf("player x: %d, y: %d\n", x, y);
 	return (0);
 }
@@ -71,6 +128,8 @@ void	setting_map(t_data *data)
 
 void	start_game(t_data *data)
 {
+	data->player_move_count = 0;
+	data->collected_count = 0;
 	setting_mlx(data);
 	load_image(data);
 	setting_map(data);
