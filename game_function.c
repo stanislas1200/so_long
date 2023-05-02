@@ -46,6 +46,24 @@ char *ft_itoa(int nbr)
     return (str);
 }
 
+#define TARGET_FPS 60
+
+int previous_frame_time = 0;
+void draw_frame() {
+    // Your code to draw a single frame
+}
+int update_frame() {
+    int current_time = mlx_get_time();
+    int elapsed_time = current_time - previous_frame_time;
+    int target_frame_time = 1000 / TARGET_FPS;
+    if (elapsed_time >= target_frame_time) {
+        draw_frame();
+        previous_frame_time = current_time;
+    }
+    return 0;
+}
+
+
 int	key_press(int keycode, t_data *data)
 {
 	int	x;
@@ -63,19 +81,32 @@ int	key_press(int keycode, t_data *data)
 	else
 		mlx_put_image_to_window(data->mlx, data->win, data->floor, x * 50, y * 50);
 	if (keycode == 13 || keycode == 126) // UP
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->playerUp , x * 50, y * 50);
 		if (data->map_copy[y - 1][x] != '1')
 			data->player_possition[1]--;
+	}
 	else if (keycode == 1 || keycode == 125) // down
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->playerDown , x * 50, y * 50);
 		if (data->map_copy[y + 1][x] != '1')
 			data->player_possition[1]++;
+	}
 	else if (keycode == 12 || keycode == 123) // left
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->playerLeft , x * 50, y * 50);
 		if (data->map_copy[y][x - 1] != '1')
 			data->player_possition[0]--;
+	}
 	else if (keycode == 2 || keycode == 124) // right
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->playerRight , x * 50, y * 50);
 		if (data->map_copy[y][x + 1] != '1')
 			data->player_possition[0]++;
+	}
 	data->player_move_count++;
-	mlx_put_image_to_window(data->mlx, data->win, data->player_image, x * 50, y * 50);
+	if (data->map_copy[y][x] == 'E' && data->collectible_nbr == 0)
+		printf("You win!\n");
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
 	mlx_string_put(data->mlx, data->win, 20, 10, 136, ft_itoa(data->player_move_count));
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Collected left: ");
@@ -96,9 +127,19 @@ void	load_image(t_data *data)
 {
 	data->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/floor.xpm", &data->map_width, &data->map_height);
 	data->wall = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall.xpm", &data->map_width, &data->map_height);
+	data->wall0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall0.xpm", &data->map_width, &data->map_height);
+	data->wall1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall1.xpm", &data->map_width, &data->map_height);
+	data->wall2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall2.xpm", &data->map_width, &data->map_height);
+	data->wall3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall3.xpm", &data->map_width, &data->map_height);
+	data->wallTop = mlx_xpm_file_to_image(data->mlx, "./data/texture/walltop.xpm", &data->map_width, &data->map_height);
+	data->wallLeft = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallleft.xpm", &data->map_width, &data->map_height);
+	data->wallRight = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallright.xpm", &data->map_width, &data->map_height);
 	data->coll = mlx_xpm_file_to_image(data->mlx, "./data/texture/collectible.xpm", &data->map_width, &data->map_height);
 	data->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/exit.xpm", &data->map_width, &data->map_height);
-	data->player_image = mlx_xpm_file_to_image(data->mlx, "./data/texture/player.xpm", &data->map_width, &data->map_height);
+	data->playerUp = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyUp.xpm", &data->map_width, &data->map_height);
+	data->playerDown = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyDown.xpm", &data->map_width, &data->map_height);
+	data->playerLeft = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyLeft.xpm", &data->map_width, &data->map_height);
+	data->playerRight = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyRight.xpm", &data->map_width, &data->map_height);
 }
 
 void	setting_map(t_data *data)
@@ -113,11 +154,22 @@ void	setting_map(t_data *data)
 		while (data->map_copy[i][++j])
 		{
 			if (data->map_copy[i][j] == '1')
-				mlx_put_image_to_window(data->mlx, data->win, data->wall, j * 50, i * 50);
+			{
+				if (data->map_copy[i - 1][j] && data->map_copy[i - 1][j] != '1')
+					mlx_put_image_to_window(data->mlx, data->win, data->wallTop, j * 50, i * 50);
+				else if (data->map_copy[i + 1][j] && data->map_copy[i + 1][j] != '1')
+					mlx_put_image_to_window(data->mlx, data->win, data->wall, j * 50, i * 50);
+				else if (data->map_copy[1][j - 1] && data->map_copy[1][j - 1] != '1')
+					mlx_put_image_to_window(data->mlx, data->win, data->wallLeft, j * 50, i * 50);
+				else if (data->map_copy[1][j + 1] && data->map_copy[1][j + 1] != '1')
+					mlx_put_image_to_window(data->mlx, data->win, data->wallRight, j * 50, i * 50);
+				else
+					mlx_put_image_to_window(data->mlx, data->win, data->wall0, j * 50, i * 50);
+			}
 			else if (data->map_copy[i][j] == 'C')
 				mlx_put_image_to_window(data->mlx, data->win, data->coll, j * 50, i * 50);
 			else if (data->map_copy[i][j] == 'P')
-				mlx_put_image_to_window(data->mlx, data->win, data->player_image, j * 50, i * 50);
+				mlx_put_image_to_window(data->mlx, data->win, data->playerUp, j * 50, i * 50);
 			else if (data->map_copy[i][j] == '0')
 				mlx_put_image_to_window(data->mlx, data->win, data->floor, j * 50, i * 50);
 			else if (data->map_copy[i][j] == 'E')
@@ -134,5 +186,6 @@ void	start_game(t_data *data)
 	load_image(data);
 	setting_map(data);
 	mlx_hook(data->win, 2, 0, &key_press, data);
+	mlx_loop_hook(data->mlx, update_frame, NULL);
 	mlx_loop(data->mlx);
 }

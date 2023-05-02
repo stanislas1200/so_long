@@ -42,9 +42,19 @@ typedef struct s_data
 	int     reachable_end;
 	int     *exit_possition;
 	/*img*/
-	void	*player_image;
+	void	*playerUp;
+	void	*playerDown;
+	void	*playerLeft;
+	void	*playerRight;
 	void	*floor;
 	void	*wall;
+	void	*wall0;
+	void	*wall1;
+	void	*wall2;
+	void	*wall3;
+	void	*wallLeft;
+	void	*wallRight;
+	void	*wallTop;
 	void	*coll;
 	void	*exit_tile;
 	/*dev*/
