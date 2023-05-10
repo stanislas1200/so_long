@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 13:31:01 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:11:35 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,6 +336,22 @@ int	main(int ac, char **av)
 			if (check_map_tiles(data))
 			{
 				propagate(data->map, data->player_possition, data->exit_possition, data, NULL);
+				int i = 0;
+				int j;
+				while (data->map[i])
+				{
+					j = 0;
+					while (data->map[i][j])
+					{
+						if (data->map[i][j] == 'C')
+							{
+								printf("\x1b[1;31mError\x1b[0m: No acces to \x1b[33mCollectible\x1b[0m line \x1b[1;35m%d:%d\x1b[0m\n", i + 1, j + 1);
+								data->reachable_end = 0;
+							}
+						j++;
+					}
+					i++;
+				}
 				if (data->reachable_end)
 					start_game(data);
 				else

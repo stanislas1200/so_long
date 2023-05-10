@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 17:35:41 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/29 17:35:43 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:20:39 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,7 @@ void propagate(char **map, int *start, int *end, t_data *data, t_propagation_dat
 		}
 	}
 	free(new_data);
+	// /*---*/
+	// print_map(data);
+	// /*---*/
 }

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 14:31:32 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/10 15:07:29 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ typedef struct s_data
 	int     player_nbr;
 	int     collectible_nbr;
 	int     exit_nbr;
-	int     reachable_end;
 	int     *exit_possition;
 	/*img*/
 	int		img_width;
@@ -63,6 +62,7 @@ typedef struct s_data
 	void	*exit_tile;
 	/*dev*/
 	int		printed;
+	int     reachable_end;
 	/*---*/
 }	t_data;
 
