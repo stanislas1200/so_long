@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/29 17:32:25 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/10 13:31:01 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ char *read_file(int fd, t_data *data)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 2; // -2 on windows
+			i -= 1; // -2 on windows
 		else
 		{
 			tmp = ft_strjoin(all_line, line);
@@ -176,7 +176,7 @@ char *read_file(int fd, t_data *data)
 		}
 		if (i != k)
 		{
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m%d and %d\x1b[0m doesn't have the same lenght\n", j, j + 1);
+			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d and %d\x1b[0m doesn't have the same lenght\n", j, j + 1);
 			free(all_line);
 			return (NULL);
 		}
@@ -195,7 +195,7 @@ char *read_file(int fd, t_data *data)
  * @param data A pointer to a t_data struct that contains data about the map.
  *
  */
-void set_map_from_file(char *path, char ***map, t_data *data)
+void set_map_from_file(char *path, t_data *data)
 {
 	int	fd;
 	char *all_line;
@@ -219,7 +219,7 @@ void set_map_from_file(char *path, char ***map, t_data *data)
 	/*Try split map*/
 	// printf("\nAll line : \n%s\n len : %d\n", all_line, data->map_width);
 	int i = -1;
-	while (all_line[++i]);
+	while (all_line[++i])
 		line_copy = malloc(i + 1);
 	i = -1;
 	while (all_line[++i])
@@ -331,13 +331,13 @@ int	main(int ac, char **av)
 	data->printed = 0;
 	if (ac == 2)
 	{
-		set_map_from_file(av[1], &data->map, data);
+		set_map_from_file(av[1], data);
 		if (data->map)
 			if (check_map_tiles(data))
 			{
 				propagate(data->map, data->player_possition, data->exit_possition, data, NULL);
 				if (data->reachable_end)
-					printf("\x1b[1;32mSucces\x1b[0m\n");// start_game(data);
+					start_game(data);
 				else
 					printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
 			}

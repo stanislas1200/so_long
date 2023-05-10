@@ -6,11 +6,11 @@
 #    By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/07 15:01:24 by sgodin            #+#    #+#              #
-#    Updated: 2023/04/29 14:20:54 by sgodin           ###   ########.fr        #
+#    Updated: 2023/05/10 13:14:22 by sgodin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-SRCS = so_long.c get_next_line.c get_next_line_utils.c propagation.c
+SRCS = so_long.c get_next_line.c get_next_line_utils.c propagation.c game_function.c
 
 NAME = so_long
 

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/29 17:16:53 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/10 14:31:32 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define SO_LONG_H
 
 # include <stdio.h>
-// # include <mlx.h>
+# include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
 # include <fcntl.h>
@@ -30,6 +30,7 @@ typedef struct s_data
 	int     *player_possition;
 	int	 	collected_count;
 	int		player_move_count;
+	int		player_frame;
 	/*map*/
 	char	**map;
 	char	**map_copy;
@@ -42,17 +43,20 @@ typedef struct s_data
 	int     reachable_end;
 	int     *exit_possition;
 	/*img*/
+	int		img_width;
+	int		img_height;
 	void	*playerUp;
 	void	*playerDown;
 	void	*playerLeft;
 	void	*playerRight;
 	void	*floor;
-	void	*wall;
+	void	*topfloor;
 	void	*wall0;
 	void	*wall1;
 	void	*wall2;
 	void	*wall3;
 	void	*wallLeft;
+	void	*walldown;
 	void	*wallRight;
 	void	*wallTop;
 	void	*coll;
