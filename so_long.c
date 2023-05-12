@@ -219,8 +219,8 @@ void set_map_from_file(char *path, t_data *data)
 	/*Try split map*/
 	// printf("\nAll line : \n%s\n len : %d\n", all_line, data->map_width);
 	int i = -1;
-	while (all_line[++i])
-		line_copy = malloc(i + 1);
+	while (all_line[++i]);
+	line_copy = malloc(i + 1);
 	i = -1;
 	while (all_line[++i])
 		line_copy[i] = all_line[i];
@@ -324,22 +324,73 @@ int check_map_tiles(t_data *data)
 	return (1);
 }
 
-void seting_map(t_data data)
+char get_wall_tile(t_data *data, int i, int j) {
+    char tile = data->map_copy[i][j];
+    
+    if (tile == '1') {
+        // Check neighboring tiles to determine wall tile
+        if (i > 0 && ((data->map_copy[i-1][j] < '0' || data->map_copy[i-1][j] > '9'))) { // Check top tile
+            if (j > 0 && (data->map_copy[i][j-1] < '0' || data->map_copy[i][j-1] > '9')) { // Check left tile
+                tile = '2';
+            } else if (j < data->map_width - 1 && (data->map_copy[i][j+1] < '0' || data->map_copy[i][j+1] > '9')) { // Check right tile
+                tile = '4';
+            } else {
+                tile = '3';
+            }
+        }
+        else if (i < data->map_height - 1 && (data->map_copy[i+1][j] < '0' || data->map_copy[i+1][j] > '9')) { // Check bottom tile
+            if (j > 0 && (data->map_copy[i][j-1] < '0' || data->map_copy[i][j-1] > '9')) { // Check left tile
+                tile = '7';
+            } else if (j < data->map_width - 1 && (data->map_copy[i][j+1] < '0' || data->map_copy[i][j+1] > '9')) { // Check right tile
+                tile = '9';
+            } else {
+                tile = '8';
+            }
+        }
+        else if (j > 0 && (data->map_copy[i][j-1] < '0' || data->map_copy[i][j-1] > '9')) { // Check left tile
+            tile = '0';
+        }
+        else if (j < data->map_width - 1 && (data->map_copy[i][j+1] < '0' || data->map_copy[i][j+1] > '9')) { // Check right tile
+            tile = '6';
+        }
+        else tile = '5';
+    }
+    return tile;
+}
+
+void seting_map(t_data *data)
 {
 	int i;
 	int	j;
 
 	i = -1;
-	while (data.map[++i])
+	while (data->map[++i])
+	{
+		j = -1; // Check propagate and checking function to merge
+		while (data->map_copy[i][++j])
+			if(data->map_copy[i][j] == '0')
+                data->map_copy[i][j] = 'X';
+	}
+	i = -1;
+	while (data->map[++i])
 	{
 		j = -1;
-		while (data.map[i][++j])
+		while (data->map[i][++j])
 		{
-			if (data.map_copy[i][j] == '1')
-			{
-				if (i > 0 && data->map_copy[i - 1][j] && data->map_copy[i - 1][j] != '1')
-			}
+			if (data->map_copy[i][j] == '1'){
+                if ((i > 0 && i < 9) && (data->map_copy[i-1][j] >= 'A' && data->map_copy[i+1][j] >= 'A'))
+                data->map_copy[i][j] = 'W';
+            else if ((j > 0 && j < 19) && (data->map_copy[i][j-1] >= 'A' && data->map_copy[i][j+1] >= 'A'))
+                data->map_copy[i][j] = 'W';
+            }
 		}
+	}
+	i = -1;
+	while (data->map_copy[++i])
+	{
+		j = -1;
+		while (data->map_copy[i][++j])
+			data->map_copy[i][j] = get_wall_tile(data, i, j);
 	}
 }
 
@@ -374,6 +425,7 @@ int	main(int ac, char **av)
 				if (data->reachable_end)
 				{
 					seting_map(data);
+					print_map(data);
 					printf("\x1b[1;32mSucces\x1b[0m\n"); // start_game(data);
 				}
 				else
@@ -392,7 +444,8 @@ int	main(int ac, char **av)
 		}
 		if (data->map){
 			free(data->map);
-			free(data->map_copy);}
+			free(data->map_copy);
+			}
 	}
 	else
 		printf("\x1b[33mWarning\x1b[0m: No Map\n");

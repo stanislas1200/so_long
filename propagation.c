@@ -65,7 +65,7 @@ void propagate(char **map, int *start, int *end, t_data *data, t_propagation_dat
 		}
 		if (data->printed == 0)
 		{
-			print_map(data);
+			// print_map(data);
 			data->printed = 1;
 		}
 		free(new_data);

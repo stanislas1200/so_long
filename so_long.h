@@ -77,6 +77,7 @@ typedef struct t_propagation_data
 
 void propagate(char **map, int *start, int *end, t_data *data, t_propagation_data *parent);
 void	start_game(t_data *data);
+void print_map(t_data *data);
 
 
 #endif
