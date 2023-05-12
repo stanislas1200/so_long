@@ -14,7 +14,7 @@
 # define SO_LONG_H
 
 # include <stdio.h>
-# include <mlx.h>
+// # include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
 # include <fcntl.h>

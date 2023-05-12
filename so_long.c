@@ -167,7 +167,7 @@ char *read_file(int fd, t_data *data)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 1; // -2 on windows
+			i -= 2; // -2 on windows
 		else
 		{
 			tmp = ft_strjoin(all_line, line);
@@ -324,6 +324,25 @@ int check_map_tiles(t_data *data)
 	return (1);
 }
 
+void seting_map(t_data data)
+{
+	int i;
+	int	j;
+
+	i = -1;
+	while (data.map[++i])
+	{
+		j = -1;
+		while (data.map[i][++j])
+		{
+			if (data.map_copy[i][j] == '1')
+			{
+				if (i > 0 && data->map_copy[i - 1][j] && data->map_copy[i - 1][j] != '1')
+			}
+		}
+	}
+}
+
 int	main(int ac, char **av)
 {
 	t_data	*data;
@@ -353,7 +372,10 @@ int	main(int ac, char **av)
 					i++;
 				}
 				if (data->reachable_end)
-					start_game(data);
+				{
+					seting_map(data);
+					printf("\x1b[1;32mSucces\x1b[0m\n"); // start_game(data);
+				}
 				else
 					printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
 			}
