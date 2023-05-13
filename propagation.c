@@ -12,15 +12,15 @@
 
 #include "so_long.h"
 /*dev*/
-void print_map(t_data *data)
+void print_map(char **map)
 {
 	int i = 0;
 	int j = 0;
-	while (data->map[i])
+	while (map[i])
 	{
 		j = 0;
 		printf("{");
-		while (data->map[i][j])
+		while (map[i][j])
 		{
 			// if (data->map_copy[i][j] == 'P')
 			// 	printf("\x1b[1;35m%c\x1b[0m", data->map_copy[i][j]);
@@ -33,7 +33,7 @@ void print_map(t_data *data)
 			// else if (data->map[i][j] == 'A')
 			// 	printf("\x1b[1;32m%c\x1b[0m", data->map_copy[i][j]);
 			// else
-				printf("\"%c\",", data->map_copy[i][j]);
+				printf("\"%c\",", map[i][j]);
 			j++;
 		}
 		printf("}\n");
@@ -73,26 +73,7 @@ void propagate2(char **map, int *start, int *end, t_data *data)
 
 int check_access(t_data *data, int *start, int *end)
 {
-	char **mapcpy;
-	int i;
-	int j;
-
-	i = 0;
-	mapcpy = malloc(sizeof(char *) * (data->map_height + 1));
-	while (i < data->map_height)
-	{
-		j = 0;
-		mapcpy[i] = malloc(sizeof(char) * (data->map_width + 1));
-		while (j < data->map_width)
-		{
-			mapcpy[i][j] = data->map[i][j];
-			j++;
-		}
-		mapcpy[i][j] = '\0';
-		i++;
-	}
-	mapcpy[i] = NULL;
-	propagate2(mapcpy, start, end, data);
+	propagate2(data->map, start, end, data);
 	
 	if (data->cave)
 		return (1);

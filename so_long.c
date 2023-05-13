@@ -187,6 +187,26 @@ char *read_file(int fd, t_data *data)
 	return all_line;
 }
 
+char **new_mapcpy(char **map, int height, int width)
+{
+	char **new_map;
+	int i;
+	int j;
+
+	i = -1;
+	new_map = malloc(sizeof(char *) * (height + 1));
+	while (++i < height)
+	{
+		new_map[i] = malloc(sizeof(char) * (width + 1));
+		j = -1;
+		while (++j < width)
+			new_map[i][j] = map[i][j];
+		new_map[i][j] = '\0';
+	}
+	new_map[i] = NULL;
+	return (new_map);
+}
+
 /**
  * Reads a file at the specified path and sets the map to the contents of the file.
  *
@@ -199,7 +219,6 @@ void set_map_from_file(char *path, t_data *data)
 {
 	int	fd;
 	char *all_line;
-	char *line_copy;
 	/*Try open map*/
 	fd = open_file(path);
 	if (fd == -1)
@@ -218,17 +237,13 @@ void set_map_from_file(char *path, t_data *data)
 	}
 	/*Try split map*/
 	// printf("\nAll line : \n%s\n len : %d\n", all_line, data->map_width);
-	int i = -1;
-	while (all_line[++i]);
-	line_copy = malloc(i + 1);
-	i = -1;
-	while (all_line[++i])
-		line_copy[i] = all_line[i];
-	line_copy[i] = '\0';
+	int i = 0;
+	while (all_line[i])
+		i++;
 	data->map = split_lines(all_line, data->map_width);
-	data->map_copy = split_lines(line_copy, data->map_width);
+	data->map_copy = new_mapcpy(data->map, data->map_height, data->map_width);
+	data->map_cave = new_mapcpy(data->map, data->map_height, data->map_width);
 	free(all_line);
-	free(line_copy);
 }
 
 /**
@@ -358,35 +373,19 @@ char get_wall_tile(t_data *data, int i, int j) {
     return tile;
 }
 
-// char **mapcpy(char **map)
-// {
-// 	int i;
-// 	int j;
-// 	char **map_copy;
+void mapcpy(char **dest, char **map)
+{
+	int i;
+	int j;
 
-// 	i = 0;
-// 	while (map[i])
-// 		i++;
-// 	map_copy = malloc(sizeof(char *) * (i + 1));
-// 	i = 0;
-// 	while (map[i])
-// 	{
-// 		j = 0;
-// 		while (map[i][j])
-// 			j++;
-// 		map_copy[i] = malloc(sizeof(char) * (j + 1));
-// 		j = 0;
-// 		while (map[i][j])
-// 		{
-// 			map_copy[i][j] = map[i][j];
-// 			j++;
-// 		}
-// 		map_copy[i][j] = '\0';
-// 		i++;
-// 	}
-// 	map_copy[i] = NULL;
-// 	return (map_copy);
-// }
+	i = -1;
+	while (map[++i])
+	{
+		j = -1;
+		while (map[i][++j])
+			dest[i][j] = map[i][j];
+	}
+}
 
 void map_setup(t_data *data)
 {
@@ -412,13 +411,16 @@ void map_setup(t_data *data)
 				if (!data->cave && i > data->map_height/3 && i < data->map_height/3 * 2 &&  j > 0 && j < data->map_width - 1 && data->map_copy[i][j - 1] == '1' && data->map_copy[i][j + 1] == '1')
 					if ((data->map_copy[i + 1][j] == 'H' || data->map_copy[i+1][j] == '0') && data->map_copy[i - 1][j] == 'H')
 					{
+						mapcpy(data->map, data->map_copy);
 						if (check_access(data, (int []){j - 1, i}, (int []){j + 1, i}))
 						{
-							data->map_copy[i][j] = '1';
 							printf("Cave found\n");
+							data->map_copy[i][j] = '1';
+							mapcpy(data->map, data->map_copy);
 							propagate(data->map_copy, (int []){j,i+1}, NULL, data, NULL);
-							// data->map_cave = mapcpy(data->map_copy);
-							// propagate(data->map, (int []){i+1,j}, NULL, data, NULL);
+							mapcpy(data->map_cave, data->map_copy);
+							mapcpy(data->map_copy, data->map);
+							propagate(data->map_copy, (int []){j,i-1}, NULL, data, NULL);
 							data->map_copy[i][j] = 'H';
 							
 						}
@@ -498,8 +500,11 @@ int	main(int ac, char **av)
 				}
 				if (data->reachable_end)
 				{
+					data->cave = 0;
 					map_setup(data);
-					print_map(data);
+					print_map(data->map_copy);
+					printf("\n");
+					print_map(data->map_cave);
 					printf("\x1b[1;32mSucces\x1b[0m\n"); // start_game(data);
 				}
 				else
@@ -514,11 +519,13 @@ int	main(int ac, char **av)
 		{
 			free(data->map[i]);
 			free(data->map_copy[i]);
+			free(data->map_cave[i]);
 			i++;
 		}
 		if (data->map){
 			free(data->map);
 			free(data->map_copy);
+			free(data->map_cave);
 			}
 	}
 	else
