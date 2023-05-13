@@ -358,8 +358,16 @@ char get_wall_tile(t_data *data, int i, int j) {
     return tile;
 }
 
-void seting_map(t_data *data)
+void map_setup(t_data *data)
 {
+	// EPCX
+
+	// 234
+	// 056
+	// 789 W
+
+	// 1A
+	// BD
 	int i;
 	int	j;
 
@@ -369,7 +377,13 @@ void seting_map(t_data *data)
 		j = -1; // Check propagate and checking function to merge
 		while (data->map_copy[i][++j])
 			if(data->map_copy[i][j] == '0')
-                data->map_copy[i][j] = 'X';
+			{
+				data->map_copy[i][j] = 'X';
+				// if (j > 0 && j < data->map_width - 1 && data->map_copy[i][j - 1] == '1' && data->map_copy[i][j + 1] == '1')
+				// 	{
+				// 		propagate(data->map, {i,j - 1}, {i, j + 1}, data, NULL);
+				// 	}
+			}
 	}
 	i = -1;
 	while (data->map[++i])
@@ -391,6 +405,23 @@ void seting_map(t_data *data)
 		j = -1;
 		while (data->map_copy[i][++j])
 			data->map_copy[i][j] = get_wall_tile(data, i, j);
+	}
+	i = -1;
+	while (data->map_copy[++i])
+	{
+		j = -1;
+		while (data->map_copy[i][++j])
+			if (data->map_copy[i][j] == '5')
+				{
+					if (i > 0 && (data->map_copy[i - 1][j] == '6' || data->map_copy[i - 1][j] == '4') && (j < data->map_width - 1 && (data->map_copy[i][j + 1] == '3' || data->map_copy[i][j + 1] == '4')))
+						data->map_copy[i][j] = 'B';
+					else if (i > 0 && (data->map_copy[i - 1][j] == '2' || data->map_copy[i - 1][j] == '0') && (j > 0 && (data->map_copy[i][j - 1] == '3' || data->map_copy[i][j - 1] == '2')))
+						data->map_copy[i][j] = 'D';
+					else if (i < data->map_height - 1 && (data->map_copy[i + 1][j] == '0' || data->map_copy[i + 1][j] == '7') && (j > 0 && (data->map_copy[i][j - 1] == '7' || data->map_copy[i][j - 1] == '8')))
+						data->map_copy[i][j] = 'A';
+					else if (i < data->map_height - 1 && (data->map_copy[i + 1][j] == '6' || data->map_copy[i + 1][j] == '9') && (j < data->map_width - 1 && (data->map_copy[i][j + 1] == '8' || data->map_copy[i][j + 1] == '9')))
+						data->map_copy[i][j] = '1';
+				}
 	}
 }
 
@@ -424,7 +455,7 @@ int	main(int ac, char **av)
 				}
 				if (data->reachable_end)
 				{
-					seting_map(data);
+					map_setup(data);
 					print_map(data);
 					printf("\x1b[1;32mSucces\x1b[0m\n"); // start_game(data);
 				}

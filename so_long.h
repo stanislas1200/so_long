@@ -41,6 +41,7 @@ typedef struct s_data
 	int     collectible_nbr;
 	int     exit_nbr;
 	int     *exit_possition;
+	// int		cave;
 	/*img*/
 	int		img_width;
 	int		img_height;
@@ -58,6 +59,10 @@ typedef struct s_data
 	void	*walldown;
 	void	*wallRight;
 	void	*wallTop;
+	void	*insideCorner0;
+	void	*insideCorner1;
+	void	*insideCorner2;
+	void	*insideCorner3;
 	void	*coll;
 	void	*exit_tile;
 	/*dev*/
