@@ -358,6 +358,36 @@ char get_wall_tile(t_data *data, int i, int j) {
     return tile;
 }
 
+// char **mapcpy(char **map)
+// {
+// 	int i;
+// 	int j;
+// 	char **map_copy;
+
+// 	i = 0;
+// 	while (map[i])
+// 		i++;
+// 	map_copy = malloc(sizeof(char *) * (i + 1));
+// 	i = 0;
+// 	while (map[i])
+// 	{
+// 		j = 0;
+// 		while (map[i][j])
+// 			j++;
+// 		map_copy[i] = malloc(sizeof(char) * (j + 1));
+// 		j = 0;
+// 		while (map[i][j])
+// 		{
+// 			map_copy[i][j] = map[i][j];
+// 			j++;
+// 		}
+// 		map_copy[i][j] = '\0';
+// 		i++;
+// 	}
+// 	map_copy[i] = NULL;
+// 	return (map_copy);
+// }
+
 void map_setup(t_data *data)
 {
 	// EPCX
@@ -378,11 +408,24 @@ void map_setup(t_data *data)
 		while (data->map_copy[i][++j])
 			if(data->map_copy[i][j] == '0')
 			{
-				data->map_copy[i][j] = 'X';
-				// if (j > 0 && j < data->map_width - 1 && data->map_copy[i][j - 1] == '1' && data->map_copy[i][j + 1] == '1')
-				// 	{
-				// 		propagate(data->map, {i,j - 1}, {i, j + 1}, data, NULL);
-				// 	}
+				data->map_copy[i][j] = 'H';
+				if (!data->cave && i > data->map_height/3 && i < data->map_height/3 * 2 &&  j > 0 && j < data->map_width - 1 && data->map_copy[i][j - 1] == '1' && data->map_copy[i][j + 1] == '1')
+					if ((data->map_copy[i + 1][j] == 'H' || data->map_copy[i+1][j] == '0') && data->map_copy[i - 1][j] == 'H')
+					{
+						if (check_access(data, (int []){j - 1, i}, (int []){j + 1, i}))
+						{
+							data->map_copy[i][j] = '1';
+							printf("Cave found\n");
+							propagate(data->map_copy, (int []){j,i+1}, NULL, data, NULL);
+							// data->map_cave = mapcpy(data->map_copy);
+							// propagate(data->map, (int []){i+1,j}, NULL, data, NULL);
+							data->map_copy[i][j] = 'H';
+							
+						}
+						else 
+							printf("Cave not found\n");
+						// propagate(data->map, (int []){i,j - 1}, (int []){i, j + 1}, data, NULL);
+					}
 			}
 	}
 	i = -1;

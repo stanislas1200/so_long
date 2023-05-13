@@ -34,6 +34,7 @@ typedef struct s_data
 	/*map*/
 	char	**map;
 	char	**map_copy;
+	char	**map_cave;
 	int     map_width;
 	int     map_height;
 	/*map check*/
@@ -41,7 +42,7 @@ typedef struct s_data
 	int     collectible_nbr;
 	int     exit_nbr;
 	int     *exit_possition;
-	// int		cave;
+	int		cave;
 	/*img*/
 	int		img_width;
 	int		img_height;
@@ -83,6 +84,8 @@ typedef struct t_propagation_data
 void propagate(char **map, int *start, int *end, t_data *data, t_propagation_data *parent);
 void	start_game(t_data *data);
 void print_map(t_data *data);
+int check_access(t_data *data, int *start, int *end);
+void propagate2(char **map, int *start, int *end, t_data *data);
 
 
 #endif
