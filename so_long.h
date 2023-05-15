@@ -21,29 +21,8 @@
 
 # include <string.h>
 
-typedef struct s_data
+typedef struct s_img
 {
-	/*mlx*/
-	void	*mlx;
-	void	*win;
-	/*player*/
-	int     *player_possition;
-	int	 	collected_count;
-	int		player_move_count;
-	int		player_frame;
-	/*map*/
-	char	**map;
-	char	**map_copy;
-	char	**map_cave;
-	int     map_width;
-	int     map_height;
-	/*map check*/
-	int     player_nbr;
-	int     collectible_nbr;
-	int     exit_nbr;
-	int     *exit_possition;
-	int		cave;
-	/*img*/
 	int		img_width;
 	int		img_height;
 	void	*playerUp;
@@ -66,6 +45,32 @@ typedef struct s_data
 	void	*insideCorner3;
 	void	*coll;
 	void	*exit_tile;
+}	t_img;
+
+typedef struct s_data
+{
+	/*mlx*/
+	void	*mlx;
+	void	*win;
+	/*player*/
+	int     *player_possition;
+	int	 	collected_count;
+	int		player_move_count;
+	int		player_frame;
+	/*map*/
+	char	**map;
+	char	**map_copy;
+	char	**map_cave;
+	int     map_width;
+	int     map_height;
+	/*img*/
+	t_img	*img; 
+	/*map check*/
+	int     player_nbr;
+	int     collectible_nbr;
+	int     exit_nbr;
+	int     *exit_possition;
+	int		cave;
 	/*dev*/
 	int		printed;
 	int     reachable_end;

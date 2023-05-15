@@ -12,6 +12,39 @@
 
 #include "so_long.h"
 
+
+void	free_all(t_data *data)
+{
+	int	i;
+
+	i = 0;
+	if (data->player_possition)
+		free(data->player_possition);
+	if (data->exit_possition)
+		free(data->exit_possition);
+	while (data->map && data->map[i])
+	{
+		free(data->map[i]);
+		if (data->map_copy[i])
+			free(data->map_copy[i]);
+		if (data->map_cave[i])
+			free(data->map_cave[i]);
+		i++;
+	}
+	if (data->map)
+	{
+		free(data->map);
+		if (data->map_copy)
+			free(data->map_copy);
+		if (data->map_cave)
+			free(data->map_cave);
+	}
+	if (data->img)
+		free(data->img);
+	if (data)
+		free(data);
+}
+
 /**
  * Splits a string into an array of strings, with each string corresponding to a line
  * terminated by a newline character ('\n').
@@ -44,7 +77,14 @@ char **split_lines(char *all_line, int len)
 	i = 0;
 	tab[tab_size + 1] = NULL;
 	j = 0;
-	tab[i] = malloc(sizeof(char) * len + 2); 
+	tab[i] = malloc(sizeof(char) * len + 2);
+	if (!tab[i])
+	{
+		while (i >= 0)
+			free(tab[i--]);
+		free(tab);
+		return (NULL);
+	}
 	while (*all_line)
 	{
 		tab[i][j++] = *all_line++;
@@ -56,6 +96,13 @@ char **split_lines(char *all_line, int len)
 			i++;
 			j = 0;
 			tab[i] = malloc(sizeof(char) * len + 2);
+			if (!tab[i])
+			{
+				while (i >= 0)
+					free(tab[i--]);
+				free(tab);
+				return (NULL);
+			}
 			all_line++;
 		}
 	}
@@ -72,10 +119,10 @@ char **split_lines(char *all_line, int len)
  */
 int open_file(char *path)
 {
-	int i = -1;
-	char *new_path = NULL;
-	int fd;
-	int free_path = 0;
+	int		i = -1;
+	char	*new_path = NULL;
+	int		fd;
+	int		free_path = 0;
 	while (path[++i])
 		if (path[i] == '.' && !(path[i + 1] == '/' && !path[i - 1]))
 			if (path[i + 1] == 'b' && path[i + 2] == 'e' && path[i + 3] == 'r' && path[i + 4] == '\0')
@@ -87,15 +134,20 @@ int open_file(char *path)
 			}
 		else if (path[i + 1] == '\0')
 				new_path = ft_strjoin(path, ".ber");
-	if (new_path){
+	if (new_path)
+	{
 		path = new_path;
-		free_path = 1;}
+		free_path = 1;
+	}
 	fd = open(path, O_RDONLY);
 	if (fd == -1)
 	{
 		new_path = ft_strjoin("./data/map/", path);
-		fd = open(new_path, O_RDONLY);
-		free(new_path);
+		if (new_path)
+		{
+			fd = open(new_path, O_RDONLY);
+			free(new_path);
+		}
 	}
 	if (free_path)
 		free(path);
@@ -160,6 +212,15 @@ char *read_file(int fd, t_data *data)
 	int i = ft_strlen(line);
 	int j = 0;
 	all_line = ft_strjoin("", line);
+	if (!all_line)
+	{
+		while (line)
+		{
+			free(line);
+			line = get_next_line(fd);
+		}
+		return (NULL);
+	}
 	int k = 0;
 	while (line)
 	{
@@ -171,12 +232,27 @@ char *read_file(int fd, t_data *data)
 		else
 		{
 			tmp = ft_strjoin(all_line, line);
+			if (!tmp)
+			{
+				while (line)
+				{
+					free(line);
+					line = get_next_line(fd);
+				}
+				free(all_line);
+				return (NULL);
+			}
 			free(all_line);
 			all_line = tmp;
 		}
 		if (i != k)
 		{
 			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d and %d\x1b[0m doesn't have the same lenght\n", j, j + 1);
+			while (line)
+			{
+				free(line);
+				line = get_next_line(fd);
+			}
 			free(all_line);
 			return (NULL);
 		}
@@ -195,9 +271,18 @@ char **new_mapcpy(char **map, int height, int width)
 
 	i = -1;
 	new_map = malloc(sizeof(char *) * (height + 1));
+	if (!new_map)
+		return (NULL);
 	while (++i < height)
 	{
 		new_map[i] = malloc(sizeof(char) * (width + 1));
+		if (!new_map[i])
+		{
+			while (--i >= 0)
+				free(new_map[i]);
+			free(new_map);
+			return (NULL);
+		}
 		j = -1;
 		while (++j < width)
 			new_map[i][j] = map[i][j];
@@ -241,8 +326,38 @@ void set_map_from_file(char *path, t_data *data)
 	while (all_line[i])
 		i++;
 	data->map = split_lines(all_line, data->map_width);
+	if (!data->map)
+	{
+		free(all_line);
+		free(data);
+		exit(1);
+	}
 	data->map_copy = new_mapcpy(data->map, data->map_height, data->map_width);
+	if (!data->map_copy)
+	{
+		free(all_line);
+		i = -1;
+		while (data->map[++i])
+			free(data->map[i]);
+		free(data->map);
+		free(data);
+		exit(1);
+	}
 	data->map_cave = new_mapcpy(data->map, data->map_height, data->map_width);
+	if (!data->map_cave)
+	{
+		free(all_line);
+		i = -1;
+		while (data->map[++i])
+			free(data->map[i]);
+		free(data->map);
+		i = -1;
+		while (data->map_copy[++i])
+			free(data->map_copy[i]);
+		free(data->map_copy);
+		free(data);
+		exit(1);
+	}
 	free(all_line);
 }
 
@@ -303,6 +418,11 @@ int check_map_tiles(t_data *data)
 	data->collectible_nbr = 0;
 	data->player_possition = malloc(sizeof(int) * 2);
 	data->exit_possition = malloc(sizeof(int) * 2);
+	if (!data->player_possition || !data->exit_possition)
+	{
+		perror("\x1b[1;31mError\x1b[0m");
+		return (0);
+	}
 	while (data->map[i])
 	{
 		j = 0;
@@ -470,37 +590,54 @@ void map_setup(t_data *data)
 	}
 }
 
+void	data_setup(t_data *data)
+{
+	data->map = NULL;
+	data->map_copy = NULL;
+	data->map_cave = NULL;
+	data->player_possition = NULL;
+	data->exit_possition = NULL;
+	data->img = NULL;
+	data->printed = 0;
+	data->cave = 0;
+}
+
 int	main(int ac, char **av)
 {
 	t_data	*data;
+	int		i;
+	int		j;
+
 	data = malloc(sizeof(t_data));
-	data->printed = 0;
+	if (!data)
+	{
+		perror("\x1b[1;31mError\x1b[0m: malloc failed\n");
+		exit(1);
+	}
+	data_setup(data);
 	if (ac == 2)
 	{
 		set_map_from_file(av[1], data);
 		if (data->map)
+		{
 			if (check_map_tiles(data))
-			{
+			{ // Leak checked until here -- 0 leaks
 				propagate(data->map, data->player_possition, data->exit_possition, data, NULL);
-				int i = 0;
-				int j;
-				while (data->map[i])
+				i = -1;
+				while (data->map[++i])
 				{
-					j = 0;
-					while (data->map[i][j])
+					j = -1;
+					while (data->map[i][++j])
 					{
 						if (data->map[i][j] == 'C')
-							{
-								printf("\x1b[1;31mError\x1b[0m: No acces to \x1b[33mCollectible\x1b[0m line \x1b[1;35m%d:%d\x1b[0m\n", i + 1, j + 1);
-								data->reachable_end = 0;
-							}
-						j++;
+						{
+							printf("\x1b[1;31mError\x1b[0m: No acces to \x1b[33mCollectible\x1b[0m line \x1b[1;35m%d:%d\x1b[0m\n", i + 1, j + 1);
+							data->reachable_end = 0;
+						}
 					}
-					i++;
 				}
 				if (data->reachable_end)
 				{
-					data->cave = 0;
 					map_setup(data);
 					print_map(data->map_copy);
 					printf("\n");
@@ -510,28 +647,12 @@ int	main(int ac, char **av)
 				else
 					printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
 			}
-		int i = 0;
-		if (data->player_possition)
-			free(data->player_possition);
-		if (data->exit_possition)
-			free(data->exit_possition);
-		while (data->map && data->map[i])
-		{
-			free(data->map[i]);
-			free(data->map_copy[i]);
-			free(data->map_cave[i]);
-			i++;
 		}
-		if (data->map){
-			free(data->map);
-			free(data->map_copy);
-			free(data->map_cave);
-			}
 	}
 	else
 		printf("\x1b[33mWarning\x1b[0m: No Map\n");
 	// mlx_destroy_window(mlx, mlx_win);
 	// free(mlx);
-	free(data);
+	free_all(data);
 	return (0);
 }
