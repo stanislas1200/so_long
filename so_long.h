@@ -35,14 +35,14 @@ typedef struct s_img
 	void	*wall1;
 	void	*wall2;
 	void	*wall3;
-	void	*wallLeft;
-	void	*walldown;
-	void	*wallRight;
-	void	*wallTop;
-	void	*insideCorner0;
-	void	*insideCorner1;
-	void	*insideCorner2;
-	void	*insideCorner3;
+	void	*wall_left;
+	void	*wall_down;
+	void	*wall_right;
+	void	*wall_top;
+	void	*inside_corner0;
+	void	*inside_corner1;
+	void	*inside_corner2;
+	void	*inside_corner3;
 	void	*coll;
 	void	*exit_tile;
 }	t_img;
@@ -53,51 +53,41 @@ typedef struct s_data
 	void	*mlx;
 	void	*win;
 	/*player*/
-	int     *player_possition;
-	int	 	collected_count;
+	int		*player_possition;
+	int		collected_count;
 	int		player_move_count;
 	int		player_frame;
 	/*map*/
 	char	**map;
 	char	**map_copy;
 	char	**map_cave;
-	int     map_width;
-	int     map_height;
+	int		map_width;
+	int		map_height;
 	/*img*/
-	t_img	*img; 
+	t_img	*img;
 	/*map check*/
-	int     player_nbr;
-	int     collectible_nbr;
-	int     exit_nbr;
-	int     *exit_possition;
+	int		player_nbr;
+	int		collectible_nbr;
+	int		exit_nbr;
+	int		*exit_possition;
 	int		cave;
 	/*dev*/
 	int		printed;
-	int     reachable_end;
+	int		reachable_end;
 	/*---*/
 }	t_data;
 
-/*dev*/
-typedef struct t_propagation_data
-{
-	int x;
-	int y;
-	struct t_propagation_data *parent;
-}   t_propagation_data;
-/*---*/
-
-void pg(char **map, int *start, int *end, t_data *data);
+void	pg(char **map, int *start, int *end, t_data *data);
 void	start_game(t_data *data);
-void print_map(char **map);
-int check_access(t_data *data, int *start, int *end);
-void pg2(char **map, int *start, int *end, t_data *data);
-void map_setup(t_data *data);
-void set_map_from_file(char *path, t_data *data);
-int check_map_tiles(t_data *data);
-void free_all(t_data *data);
-char **split_lines(char *all_line, int len, char **tab, int j);
-int open_file(char *path);
-char **new_mapcpy(char **map, int height, int width);
-
+void	print_map(char **map);
+int		check_access(t_data *data, int *start, int *end);
+void	pg2(char **map, int *start, int *end, t_data *data);
+void	map_setup(t_data *data);
+void	set_map_from_file(char *path, t_data *data);
+int		check_map_tiles(t_data *data);
+void	free_all(t_data *data);
+char	**split_lines(char *all_line, int len, char **tab, int j);
+int		open_file(char *path);
+char	**new_mapcpy(char **map, int height, int width);
 
 #endif

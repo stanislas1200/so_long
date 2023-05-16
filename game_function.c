@@ -135,14 +135,14 @@ void	load_image(t_data *data)
 {
 	data->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/floor.xpm", &data->img_width, &data->img_height);
 	data->topfloor = mlx_xpm_file_to_image(data->mlx, "./data/texture/topfloor.xpm", &data->img_width, &data->img_height);
-	data->walldown = mlx_xpm_file_to_image(data->mlx, "./data/texture/walldown.xpm", &data->img_width, &data->img_height);
+	data->wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/walldown.xpm", &data->img_width, &data->img_height);
 	data->wall0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall0.xpm", &data->img_width, &data->img_height);
 	data->wall1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall1.xpm", &data->img_width, &data->img_height);
 	data->wall2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall2.xpm", &data->img_width, &data->img_height);
 	data->wall3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/wall3.xpm", &data->img_width, &data->img_height);
-	data->wallTop = mlx_xpm_file_to_image(data->mlx, "./data/texture/walltop.xpm", &data->img_width, &data->img_height);
-	data->wallLeft = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallleft.xpm", &data->img_width, &data->img_height);
-	data->wallRight = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallright.xpm", &data->img_width, &data->img_height);
+	data->wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/walltop.xpm", &data->img_width, &data->img_height);
+	data->wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallleft.xpm", &data->img_width, &data->img_height);
+	data->wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/wallright.xpm", &data->img_width, &data->img_height);
 	data->coll = mlx_xpm_file_to_image(data->mlx, "./data/texture/collectible.xpm", &data->img_width, &data->img_height);
 	data->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/exit.xpm", &data->img_width, &data->img_height);
 	data->playerUp = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyUp.xpm", &data->img_width, &data->img_height);
@@ -171,7 +171,7 @@ void	setting_map(t_data *data)
 					else if (j > 0 && data->map_copy[i][j - 1] && data->map_copy[i][j - 1] != '1')
 						mlx_put_image_to_window(data->mlx, data->win, data->wall0, j * 50, i * 50);
 					else
-						mlx_put_image_to_window(data->mlx, data->win, data->wallTop, j * 50, i * 50);
+						mlx_put_image_to_window(data->mlx, data->win, data->wall_top, j * 50, i * 50);
 				}
 				else if (i < data->map_height - 1 && data->map_copy[i + 1][j] && data->map_copy[i + 1][j] != '1')
 				{
@@ -180,12 +180,12 @@ void	setting_map(t_data *data)
 					else if (j > 0 && data->map_copy[i][j - 1] && data->map_copy[i][j - 1] != '1')
 						mlx_put_image_to_window(data->mlx, data->win, data->wall2, j * 50, i * 50);
 					else
-						mlx_put_image_to_window(data->mlx, data->win, data->walldown, j * 50, i * 50);
+						mlx_put_image_to_window(data->mlx, data->win, data->wall_down, j * 50, i * 50);
 				}
 				else if (j > 0 && data->map_copy[i][j - 1] && data->map_copy[i][j - 1] != '1')
-					mlx_put_image_to_window(data->mlx, data->win, data->wallLeft, j * 50, i * 50);
+					mlx_put_image_to_window(data->mlx, data->win, data->wall_left, j * 50, i * 50);
 				else if (j < data->map_width - 1 && data->map_copy[i][j + 1] && data->map_copy[i][j + 1] != '1')
-					mlx_put_image_to_window(data->mlx, data->win, data->wallRight, j * 50, i * 50);
+					mlx_put_image_to_window(data->mlx, data->win, data->wall_right, j * 50, i * 50);
 				else
 					mlx_put_image_to_window(data->mlx, data->win, data->topfloor, j * 50, i * 50);
 			}
