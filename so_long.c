@@ -40,9 +40,9 @@ void	free_all(t_data *data)
 	while (data->map && data->map[i])
 	{
 		free(data->map[i]);
-		if (data->map_copy[i])
+		if (data->map_copy && data->map_copy[i])
 			free(data->map_copy[i]);
-		if (data->map_cave[i])
+		if (data->map_cave && data->map_cave[i])
 			free(data->map_cave[i]);
 		i++;
 	}
@@ -66,6 +66,8 @@ void	data_setup(t_data *data)
 	data->player_move_count = 0;
 	data->collected_count = 0;
 	data->reachable_end = 0;
+	data->map_height = 0;
+	data->map_width = 0;
 }
 
 int	main(int ac, char **av)

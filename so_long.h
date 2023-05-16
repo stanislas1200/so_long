@@ -94,6 +94,10 @@ void pg2(char **map, int *start, int *end, t_data *data);
 void map_setup(t_data *data);
 void set_map_from_file(char *path, t_data *data);
 int check_map_tiles(t_data *data);
+void free_all(t_data *data);
+char **split_lines(char *all_line, int len, char **tab, int j);
+int open_file(char *path);
+char **new_mapcpy(char **map, int height, int width);
 
 
 #endif
