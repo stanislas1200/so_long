@@ -86,11 +86,14 @@ typedef struct t_propagation_data
 }   t_propagation_data;
 /*---*/
 
-void propagate(char **map, int *start, int *end, t_data *data, t_propagation_data *parent);
+void pg(char **map, int *start, int *end, t_data *data);
 void	start_game(t_data *data);
 void print_map(char **map);
 int check_access(t_data *data, int *start, int *end);
-void propagate2(char **map, int *start, int *end, t_data *data);
+void pg2(char **map, int *start, int *end, t_data *data);
+void map_setup(t_data *data);
+void set_map_from_file(char *path, t_data *data);
+int check_map_tiles(t_data *data);
 
 
 #endif

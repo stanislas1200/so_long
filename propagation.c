@@ -11,40 +11,9 @@
 /* ************************************************************************** */
 
 #include "so_long.h"
-/*dev*/
-void print_map(char **map)
+
+void	pg2(char **map, int *start, int *end, t_data *data)
 {
-	int i = 0;
-	int j = 0;
-	while (map[i])
-	{
-		j = 0;
-		printf("{");
-		while (map[i][j])
-		{
-			// if (data->map_copy[i][j] == 'P')
-			// 	printf("\x1b[1;35m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'E')
-			// 	printf("\x1b[1;31m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'C' && data->map[i][j] == 'A')
-			// 	printf("\x1b[1;36m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'C')
-			// 	printf("\x1b[1;33m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map[i][j] == 'A')
-			// 	printf("\x1b[1;32m%c\x1b[0m", data->map_copy[i][j]);
-			// else
-				printf("\"%c\",", map[i][j]);
-			j++;
-		}
-		printf("}\n");
-		i++;
-	}
-}
-/*---*/
-void propagate2(char **map, int *start, int *end, t_data *data)
-{
-	if (data->cave)
-		return ;
 	int	i;
 	int	j;
 
@@ -55,84 +24,54 @@ void propagate2(char **map, int *start, int *end, t_data *data)
 	}
 	if (map[start[1]][start[0]] == '1')
 	{
-		i = -1;
+		i = -2;
 		map[start[1]][start[0]] = '#';
-		while (i < 2)
+		while (++i < 2)
 		{
-			j = -1;
-			while (j < 2)
-			{
-				if ((i == 0 || j == 0) && i + start[1] >= 0 && i + start[1] < data->map_height && j + start[0] >= 0 && j + start[0] < data->map_width && map[i + start[1]][j + start[0]])
-					propagate2(map, (int []){j + start[0], i + start[1]}, end, data);
-				j++;
-			}
-			i++;
+			j = -2;
+			while (++j < 2)
+				if ((i == 0 || j == 0) && i + start[1] >= 0 && \
+				i + start[1] < data->map_height && j + start[0] >= 0 && \
+				j + start[0] < data->map_width && \
+				map[i + start[1]][j + start[0]])
+					pg2(map, (int []){j + start[0], i + start[1]}, end, data);
 		}
 	}
 }
 
-int check_access(t_data *data, int *start, int *end)
+int	check_access(t_data *data, int *start, int *end)
 {
-	propagate2(data->map, start, end, data);
-	
+	pg2(data->map, start, end, data);
 	if (data->cave)
 		return (1);
 	return (0);
 }
-void propagate(char **map, int *start, int *end, t_data *data, t_propagation_data *parent)
+
+void	pg(char **map, int *start, int *end, t_data *data)
 {
 	int	i;
 	int	j;
 
-	/*dev*/
-	t_propagation_data	*new_data = malloc(sizeof(t_propagation_data));
-
-	new_data->x = start[0];
-	new_data->y = start[1];
-	new_data->parent = parent;
-	/*---*/
 	if (end && start[0] == end[0] && start[1] == end[1])
 	{
 		data->reachable_end = 1;
-		/*dev*/
-		t_propagation_data	*current = new_data;
-		while (current->parent)
-		{
-			map[current->y][current->x] = 'A';
-			current = current->parent;
-		}
-		if (data->printed == 0)
-		{
-			// print_map(data);
-			data->printed = 1;
-		}
-		free(new_data);
-		/*---*/
 		return ;
 	}
-	if (map[start[1]][start[0]] == '0' || map[start[1]][start[0]] == 'H' || map[start[1]][start[0]] == 'C' || map[start[1]][start[0]] == 'E' || map[start[1]][start[0]] == 'P')
+	if (map[start[1]][start[0]] == '0' || map[start[1]][start[0]] == 'H' || \
+	map[start[1]][start[0]] == 'C' || \
+	map[start[1]][start[0]] == 'E' || map[start[1]][start[0]] == 'P')
 	{
-		i = -1;
+		i = -2;
 		if (end)
 			map[start[1]][start[0]] = 'X';
-		else 
+		else
 			map[start[1]][start[0]] = '5';
-		while (i < 2)
+		while (++i < 2)
 		{
-			j = -1;
-			while (j < 2)
-			{
+			j = -2;
+			while (++j < 2)
 				if ((i == 0 || j == 0) && map[i + start[1]][j + start[0]])
-				{
-					propagate(map, (int []){j + start[0], i + start[1]}, end, data, new_data);
-				}
-				j++;
-			}
-			i++;
+					pg(map, (int []){j + start[0], i + start[1]}, end, data);
 		}
 	}
-	free(new_data);
-	// /*---*/
-	// print_map(data);
-	// /*---*/
 }

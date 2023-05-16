@@ -12,12 +12,13 @@
 
 #include "so_long.h"
 
-
 int	get_len(int nbr)
 {
 	int	len;
 
 	len = 0;
+	if (nbr <= 0)
+		len = 1;
 	while (nbr != 0)
 	{
 		len++;
@@ -32,9 +33,6 @@ char	*ft_itoa(int nbr)
 	int		i;
 
 	i = get_len(nbr);
-	if (nbr <= 0)
-		i++;
-
 	str = (char *)malloc(sizeof(char) * (i + 1));
 	if (nbr < 0)
 	{
@@ -47,9 +45,7 @@ char	*ft_itoa(int nbr)
 		else
 			nbr *= -1;
 	}
-	str[i] = '\0';
-
-	i--;
+	str[i]-- = '\0';
 	if (nbr == 0)
 		str[i] = '0';
 	while (nbr != 0)
@@ -133,7 +129,6 @@ void	setting_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
 	data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * data->map_height, "The Mysterious Firefly Cave");
-	// data->player_frame = 1;
 }
 
 void	load_image(t_data *data)
@@ -208,9 +203,7 @@ void	setting_map(t_data *data)
 
 void	start_game(t_data *data)
 {
-	data->player_frame = 1;
-	data->player_move_count = 0;
-	data->collected_count = 0;
+	map_setup(data);
 	setting_mlx(data);
 	load_image(data);
 	setting_map(data);
