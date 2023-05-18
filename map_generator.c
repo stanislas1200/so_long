@@ -15,7 +15,7 @@
 #include <time.h>
 
 #define WIDTH 20
-#define HEIGHT 10
+#define HEIGHT 20
 #define WALL '1'
 #define EMPTY '0'
 #define START 'P'
