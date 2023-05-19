@@ -76,7 +76,6 @@ void	generate_cave(t_data *data, int i, int j)
 		{
 			if (check_access(data, (int []){j - 1, i}, (int []){j + 1, i}))
 			{
-				printf("cave\n");
 				data->map_copy[i][j] = '1';
 				mapcpy(data->map_cave, data->map_copy);
 				pg(data->map_cave, (int []){j, i - 1}, NULL, data);
@@ -88,16 +87,6 @@ void	generate_cave(t_data *data, int i, int j)
 	}
 }
 
-/*
-EPCX
-
-234
-056
-789 W
-
-1A
-BD
-*/
 void	map_setup(t_data *data)
 {
 	int	i;

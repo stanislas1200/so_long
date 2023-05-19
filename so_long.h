@@ -25,26 +25,72 @@ typedef struct s_img
 {
 	int		img_width;
 	int		img_height;
-	void	*playerUp;
-	void	*playerDown;
-	void	*playerLeft;
-	void	*playerRight;
-	void	*floor;
-	void	*topfloor;
-	void	*wall0;
-	void	*wall1;
-	void	*wall2;
-	void	*wall3;
-	void	*wall_left;
-	void	*wall_down;
-	void	*wall_right;
-	void	*wall_top;
-	void	*inside_corner0;
-	void	*inside_corner1;
-	void	*inside_corner2;
-	void	*inside_corner3;
-	void	*coll;
 	void	*exit_tile;
+	void	*unknown_tile;
+	/*outside*/
+	void	*outside_tiles[16];
+	void	*floor;
+	void	*wall_floor;
+	void	*wall_otop_corner_left;
+	void	*wall_otop_corner_right;
+	void	*wall_odown_corner_left;
+	void	*wall_odown_corner_right;
+	void	*wall_itop_corner_left;
+	void	*wall_itop_corner_right;
+	void	*wall_idown_corner_left;
+	void	*wall_idown_corner_right;
+	void	*wall_left;
+	void	*wall_right;
+	void	*wall_down;
+	void	*wall_top;
+	void	*wall_solo;
+	void	*collectible[3];
+	void	*collectible0;
+	void	*collectible1;
+	/*cave*/
+	void	*inside_tiles[16];
+	void	*cave_floor;
+	void	*cave_wall_floor;
+	void	*cave_wall_otop_corner_left;
+	void	*cave_wall_otop_corner_right;
+	void	*cave_wall_odown_corner_left;
+	void	*cave_wall_odown_corner_right;
+	void	*cave_wall_itop_corner_left;
+	void	*cave_wall_itop_corner_right;
+	void	*cave_wall_idown_corner_left;
+	void	*cave_wall_idown_corner_right;
+	void	*cave_wall_left;
+	void	*cave_wall_right;
+	void	*cave_wall_down;
+	void	*cave_wall_top;
+	void	*cave_wall_solo;
+	void	*cave_collectible[3];
+	void	*cave_collectible0;
+	void	*cave_collectible1;
+	/*---*/
+	/*player*/
+	void	**player[5][5];
+	// void	*player_up[5];
+	void	*player_up_0;
+	void	*player_up_1;
+	void	*player_up_2;
+	void	*player_up_3;
+	// void	*player_down[5];
+	void	*player_down_0;
+	void	*player_down_1;
+	void	*player_down_2;
+	void	*player_down_3;
+	// void	*player_left[5];
+	void	*player_left_0;
+	void	*player_left_1;
+	void	*player_left_2;
+	void	*player_left_3;
+	// void	*player_right[5];
+	void	*player_right_0;
+	void	*player_right_1;
+	void	*player_right_2;
+	void	*player_right_3;
+	/*---*/
 }	t_img;
 
 typedef struct s_data

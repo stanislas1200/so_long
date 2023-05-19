@@ -119,7 +119,7 @@ int	main(int ac, char **av)
 		set_map_from_file(av[1], data);
 		if (check_map_tiles(data, -1, -1))
 			if (data->reachable_end)
-				printf("\x1b[1;32mSucces\x1b[0m\n"); //start_game(data);
+				start_game(data);
 			else
 				printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
 	}
