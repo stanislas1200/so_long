@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 15:23:27 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 16:38:24 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_img
 	void	*exit_tile;
 	void	*unknown_tile;
 	/*outside*/
-	void	*outside_tiles[16];
+	void	*outside_tiles[17];
 	void	*floor;
 	void	*wall_floor;
 	void	*wall_otop_corner_left;
@@ -48,7 +48,7 @@ typedef struct s_img
 	void	*collectible0;
 	void	*collectible1;
 	/*cave*/
-	void	*inside_tiles[16];
+	void	*inside_tiles[17];
 	void	*cave_floor;
 	void	*cave_wall_floor;
 	void	*cave_wall_otop_corner_left;
@@ -112,6 +112,7 @@ typedef struct s_data
 	int		map_height;
 	/*img*/
 	t_img	*img;
+	int		time;
 	/*map check*/
 	int		player_nbr;
 	int		collectible_nbr;

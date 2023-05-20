@@ -74,6 +74,7 @@ void	generate_cave(t_data *data, int i, int j)
 		if ((data->map_copy[i + 1][j] == 'H' || \
 		data->map_copy[i + 1][j] == '0') && data->map_copy[i - 1][j] == 'H')
 		{
+			mapcpy(data->map, data->map_copy);
 			if (check_access(data, (int []){j - 1, i}, (int []){j + 1, i}))
 			{
 				data->map_copy[i][j] = '1';

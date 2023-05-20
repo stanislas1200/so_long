@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 17:35:52 by sgodin            #+#    #+#             */
-/*   Updated: 2023/04/29 17:35:54 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 17:41:48 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define WIDTH 20
-#define HEIGHT 20
+#define WIDTH 100
+#define HEIGHT 100
 #define WALL '1'
 #define EMPTY '0'
 #define START 'P'

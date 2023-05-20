@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 15:47:04 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 16:34:46 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ void	data_setup(t_data *data)
 	data->map_height = 0;
 	data->map_width = 0;
 	data->direction = 0;
+	data->time = 0;
 }
 
 void	print_map(char **map)
