@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 14:49:13 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 14:43:33 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,112 +73,63 @@ char	*ft_itoa(int nbr)
 // }
 
 
-// int	key_press(int keycode, t_data *data)
-// {
-// 	int	x;
-// 	int	y;
 
-// 	draw_map(data);
-// 	x = data->player_possition[0];
-// 	y = data->player_possition[1];
-// 	if (data->map_copy[y][x] == 'E')
-// 		mlx_put_image_to_window(data->mlx, data->win, data->exit_tile, x * 50, y * 50);
-// 	else if (data->map_copy[y][x] == 'C')
-// 	{
-// 		data->map_copy[y][x] = '0';
-// 		data->collectible_nbr--;
-// 		mlx_put_image_to_window(data->mlx, data->win, data->floor, data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	}
-// 	else
-// 			mlx_put_image_to_window(data->mlx, data->win, data->floor, data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	if (keycode == 13 || keycode == 126) // UP
-// 	{
-// 		if (data->map_copy[y - 1][x] != '1')
-// 			data->player_possition[1]--;
-// 		mlx_put_image_to_window(data->mlx, data->win, data->playerUp , data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	}
-// 	else if (keycode == 1 || keycode == 125) // down
-// 	{
-// 		if (data->map_copy[y + 1][x] != '1')
-// 			data->player_possition[1]++;
-// 		mlx_put_image_to_window(data->mlx, data->win, data->playerDown , data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	}
-// 	else if (keycode == 12 || keycode == 123) // left
-// 	{
-// 		if (data->map_copy[y][x - 1] != '1')
-// 			data->player_possition[0]--;
-// 		mlx_put_image_to_window(data->mlx, data->win, data->playerLeft , data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	}
-// 	else if (keycode == 2 || keycode == 124) // right
-// 	{
-// 		if (data->map_copy[y][x + 1] != '1')
-// 			data->player_possition[0]++;
-// 		mlx_put_image_to_window(data->mlx, data->win, data->playerRight , data->player_possition[0] * 50, data->player_possition[1] * 50);
-// 	}
-// 	data->player_move_count++;
-// 	if (data->map_copy[data->player_possition[1]][data->player_possition[0]] == 'E' && data->collectible_nbr == 0)
-// 		printf("You win!\n");
-// 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
-// 	mlx_string_put(data->mlx, data->win, 160, 10, 136, ft_itoa(data->player_move_count));
-// 	mlx_string_put(data->mlx, data->win, 5, 25, 136, "Collected left: ");
-// 	mlx_string_put(data->mlx, data->win, 160, 25, 136, ft_itoa(data->collectible_nbr));
-// 	printf("player x: %d, y: %d\n", x, y);
-// 	return (0);
-// }
+void	setting_mlx(t_data *data)
+{
+	data->mlx = mlx_init();
+	data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * data->map_height, "The Mysterious Firefly Cave");
+}
 
-// void	setting_mlx(t_data *data)
-// {
-// 	data->mlx = mlx_init();
-// 	data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * data->map_height, "The Mysterious Firefly Cave");
-// }
-
-// void	load_image(t_data *data)
-// {
-// 	data->collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/collectible0.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/collectible1.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/floor.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_floor.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_odown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	//
-// 	//
-// 	//
-// 	//
-// 	data->wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_down.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_top.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	// data->wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/wall_bush.xpm", &data->img->img_width, &data->img->img_height);
+void	load_image(t_data *data)
+{
+	data->img = malloc(sizeof(t_img));
+	data->img->collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/collectible0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/collectible1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_odown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
 	
-// 	data->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/exit.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->unknown_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/unknown_tile.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_itop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_itop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_idown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_idown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	
+	data->img->wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_down.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_top.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_solo.xpm", &data->img->img_width, &data->img->img_height);
+	
+	data->img->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/exit.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->unknown_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/unknown_tile.xpm", &data->img->img_width, &data->img->img_height);
 
-// 	data->cave_collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible0.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible1.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_floor.xpm", &data->img->img_width, &data->img->img_height);
-// 	// data->cave_wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_floor.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_down.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_top.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_left.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_right.xpm", &data->img->img_width, &data->img->img_height);
-// 	data->cave_wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/oustide/cave_wall_solo.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_floor.xpm", &data->img->img_width, &data->img->img_height);
+	// data->cave_wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_down.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_top.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/wall_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_solo.xpm", &data->img->img_width, &data->img->img_height);
 	
 
-// 	// data->playerUp = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyUp.xpm", &data->img->img_width, &data->img->img_height);
-// 	// data->playerDown = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyDown.xpm", &data->img->img_width, &data->img->img_height);
-// 	// data->playerLeft = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyLeft.xpm", &data->img->img_width, &data->img->img_height);
-// 	// data->playerRight = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyRight.xpm", &data->img->img_width, &data->img->img_height);
-// }
+	// data->playerUp = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyUp.xpm", &data->img->img_width, &data->img->img_height);
+	// data->playerDown = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyDown.xpm", &data->img->img_width, &data->img->img_height);
+	// data->playerLeft = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyLeft.xpm", &data->img->img_width, &data->img->img_height);
+	// data->playerRight = mlx_xpm_file_to_image(data->mlx, "./data/texture/fireflyRight.xpm", &data->img->img_width, &data->img->img_height);
+}
 
 // void	setting_map(t_data *data)
 // {
@@ -301,14 +252,67 @@ void	draw_map(t_data *data)
 		{
 			j = -1;
 			while (data->map_copy[i][++j])
-				mlx_put_image_to_window(data->mlx, data->win, draw_tile(data, data->map_copy[i][j], data->img->outside_tiles), j * 50 + data->player_possition[0] * 50 , i * 50 + data->player_possition[1] * 50);
+				mlx_put_image_to_window(data->mlx, data->win, draw_tile(data, data->map_copy[i][j], data->img->outside_tiles), j * 50, i * 50);
 		}
 	}
 }
 
+
+int	key_press(int keycode, t_data *data)
+{
+	int	x;
+	int	y;
+
+	draw_map(data);
+	x = data->player_possition[0];
+	y = data->player_possition[1];
+	if (data->map_copy[y][x] == 'E')
+		mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile, x * 50, y * 50);
+	else if (data->map_copy[y][x] == 'C')
+	{
+		data->map_copy[y][x] = 'H';
+		data->collectible_nbr--;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->floor, data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	else
+			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, data->player_possition[0] * 50, data->player_possition[1] * 50);
+	if (keycode == 13 || keycode == 126) // UP
+	{
+		if (data->map[y - 1][x] != '1' && data->map[y - 1][x] != '#')
+			data->player_possition[1]--;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile , data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	else if (keycode == 1 || keycode == 125) // down
+	{
+		if (data->map[y + 1][x] != '1' && data->map[y + 1][x] != '#')
+			data->player_possition[1]++;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile , data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	else if (keycode == 12 || keycode == 123) // left
+	{
+		if (data->map[y][x - 1] != '1' && data->map[y][x - 1] != '#')
+			data->player_possition[0]--;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile , data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	else if (keycode == 2 || keycode == 124) // right
+	{
+		if (data->map[y][x + 1] != '1' && data->map[y][x + 1] != '#')
+			data->player_possition[0]++;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile , data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	data->player_move_count++;
+	if (data->map_copy[data->player_possition[1]][data->player_possition[0]] == 'E' && data->collectible_nbr == 0)
+		printf("You win!\n");
+	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
+	mlx_string_put(data->mlx, data->win, 160, 10, 136, ft_itoa(data->player_move_count));
+	mlx_string_put(data->mlx, data->win, 5, 25, 136, "Collected left: ");
+	mlx_string_put(data->mlx, data->win, 160, 25, 136, ft_itoa(data->collectible_nbr));
+	printf("player x: %d, y: %d\n", x, y);
+	return (0);
+}
+
 void	image_setup(t_data *data)
 {
-	data->img = malloc(sizeof(t_img));
 	data->img->outside_tiles[0] = data->img->wall_otop_corner_left;
 	data->img->outside_tiles[1] = data->img->wall_top;
 	data->img->outside_tiles[2] = data->img->wall_otop_corner_right;
@@ -324,7 +328,7 @@ void	image_setup(t_data *data)
 	data->img->outside_tiles[12] = data->img->wall_idown_corner_left;
 	data->img->outside_tiles[13] = data->img->wall_idown_corner_right;
 	data->img->outside_tiles[14] = data->img->floor;
-	data->img->outside_tiles[15] = data->img->collectible;
+	data->img->outside_tiles[15] = data->img->collectible0;
 	/*cave*/
 	data->img->inside_tiles[0] = data->img->cave_wall_otop_corner_left;
 	data->img->inside_tiles[1] = data->img->cave_wall_top;
@@ -368,16 +372,16 @@ void	image_setup(t_data *data)
 void	start_game(t_data *data)
 {
 	printf("\x1b[1;32mSucces\x1b[0m\n");
+
 	map_setup(data);
-	print_map(data->map_copy); // # X 1
+	print_map(data->map); // # X 1
 	if (data->map_copy[data->player_possition[1]][data->player_possition[0]] == 'P')
 		data->cave = 0;
-	// setting_mlx(data);
-	// setting_map(data);
-	// load_image(data);
+	setting_mlx(data);
+	load_image(data);
 	image_setup(data);
 	draw_map(data);
-	// mlx_hook(data->win, 2, 0, &key_press, data);
+	mlx_hook(data->win, 2, 0, &key_press, data);
 	// mlx_loop_hook(data->mlx, update_frame, data);
-	// mlx_loop(data->mlx);
+	mlx_loop(data->mlx);
 }

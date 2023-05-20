@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 15:07:29 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 14:37:35 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 # define SO_LONG_H
 
 # include <stdio.h>
-// # include <mlx.h>
+# include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
 # include <fcntl.h>

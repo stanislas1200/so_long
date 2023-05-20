@@ -33,7 +33,7 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 2; // -2 on windows
+			i -= 1; // -2 on windows
 		else
 			all_line = read_file_helper2(all_line, line, fd);
 		if (i != data->map_width)

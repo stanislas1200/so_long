@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 15:11:35 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 14:15:50 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,6 @@ void	print_map(char **map)
 int	main(int ac, char **av)
 {
 	t_data	*data;
-	int		i;
-	int		j;
 
 	data = malloc(sizeof(t_data));
 	if (!data)
@@ -118,10 +116,16 @@ int	main(int ac, char **av)
 	{
 		set_map_from_file(av[1], data);
 		if (check_map_tiles(data, -1, -1))
+		{
 			if (data->reachable_end)
+			{
 				start_game(data);
+			}
 			else
+			{
 				printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
+			}
+		}
 	}
 	else
 		printf("\x1b[33mWarning\x1b[0m: No Map\n");
