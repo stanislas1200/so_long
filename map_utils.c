@@ -80,8 +80,8 @@ void	generate_cave(t_data *data, int i, int j)
 				mapcpy(data->map_cave, data->map_copy);
 				pg(data->map_cave, (int []){j, i - 1}, NULL, data);
 				pg(data->map_copy, (int []){j, i + 1}, NULL, data);
-				data->map_copy[i][j] = 'H';
-				data->map_cave[i][j] = 'H';
+				data->map_copy[i][j] = '-';
+				data->map_cave[i][j] = '-';
 			}
 		}
 	}
