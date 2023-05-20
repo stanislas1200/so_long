@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 14:37:35 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/20 15:23:27 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ typedef struct s_data
 	int		collected_count;
 	int		player_move_count;
 	int		player_frame;
+	int		direction;
 	/*map*/
 	char	**map;
 	char	**map_copy;
