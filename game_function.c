@@ -34,17 +34,8 @@ char	*ft_itoa(int nbr)
 
 	i = get_len(nbr);
 	str = (char *)malloc(sizeof(char) * (i + 1));
-	if (nbr < 0)
-	{
-		str[0] = '-';
-		if (nbr == -2147483648)
-		{
-			str[1] = '2';
-			nbr = 147483648;
-		}
-		else
-			nbr *= -1;
-	}
+	if (!str)
+		return (NULL);
 	str[i--] = '\0';
 	if (nbr == 0)
 		str[i] = '0';
@@ -339,6 +330,7 @@ void	draw_map(t_data *data)
 
 void	print_on_screen(t_data *data)
 {
+	// make to store then free ?
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
 	mlx_string_put(data->mlx, data->win, 160, \
 	10, 136, ft_itoa(data->player_move_count));
@@ -450,12 +442,15 @@ int	key_press(int keycode, t_data *data)
 
 void	image_setup3(t_data *data)
 {
+	data->img->player[3][0] = data->img->player_right_0;
+	data->img->player[3][1] = data->img->player_right_1;
 	data->img->player[3][2] = data->img->player_right_2;
 	data->img->player[3][3] = data->img->player_right_3;
 }
 
 void	image_setup2(t_data *data)
 {
+	data->img->inside_tiles[6] = data->img->cave_wall_odown_corner_left;
 	data->img->inside_tiles[7] = data->img->cave_wall_down;
 	data->img->inside_tiles[8] = data->img->cave_wall_odown_corner_right;
 	data->img->inside_tiles[9] = data->img->cave_wall_solo;
@@ -466,7 +461,7 @@ void	image_setup2(t_data *data)
 	data->img->inside_tiles[14] = data->img->cave_floor;
 	data->img->inside_tiles[15] = data->img->cave_collectible0;
 	data->img->inside_tiles[16] = data->img->cave_collectible1;
-	data->img->inside_tiles[17] = data->img->door;
+	data->img->inside_tiles[17] = data->img->cave_door;
 	data->img->player[0][0] = data->img->player_up_0;
 	data->img->player[0][1] = data->img->player_up_1;
 	data->img->player[0][2] = data->img->player_up_2;
@@ -479,8 +474,7 @@ void	image_setup2(t_data *data)
 	data->img->player[2][1] = data->img->player_left_1;
 	data->img->player[2][2] = data->img->player_left_2;
 	data->img->player[2][3] = data->img->player_left_3;
-	data->img->player[3][0] = data->img->player_right_0;
-	data->img->player[3][1] = data->img->player_right_1;
+	image_setup3(data);
 }
 
 void	image_setup(t_data *data)
@@ -509,7 +503,7 @@ void	image_setup(t_data *data)
 	data->img->inside_tiles[3] = data->img->cave_wall_left;
 	data->img->inside_tiles[4] = data->img->cave_wall_floor;
 	data->img->inside_tiles[5] = data->img->cave_wall_right;
-	data->img->inside_tiles[6] = data->img->cave_wall_odown_corner_left;
+	image_setup2(data);
 }
 
 void	start_game(t_data *data)

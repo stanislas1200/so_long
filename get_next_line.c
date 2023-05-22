@@ -113,6 +113,8 @@ char	*get_next_line(int fd)
 	line = NULL;
 	if (!next)
 		next = ft_strdup("");
+	if (!next)
+		return (NULL);
 	ft_read_file(fd, &next);
 	if (next != NULL && *next != '\0')
 	{

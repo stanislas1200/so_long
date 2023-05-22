@@ -68,7 +68,7 @@ typedef struct s_img
 	void	*cave_wall_down;
 	void	*cave_wall_top;
 	void	*cave_wall_solo;
-	void	*door;
+	void	*cave_door;
 	void	*cave_collectible0;
 	void	*cave_collectible1;
 	/*---*/
