@@ -126,6 +126,7 @@ typedef struct s_data
 	/*dev*/
 	int		printed;
 	int		reachable_end;
+	int 	design_mode;
 	/*---*/
 }	t_data;
 

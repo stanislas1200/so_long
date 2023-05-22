@@ -67,8 +67,11 @@ int	update_frame(t_data *data)
 void	setting_mlx(t_data *data)
 {
 	data->mlx = mlx_init();
-	data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * \
-	data->map_height, "The Mysterious Firefly Cave");
+	if (data->design_mode)
+		data->win = mlx_new_window(data->mlx, 1000, 500, "The Mysterious Firefly Cave");
+	else
+		data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * \
+		data->map_height, "The Mysterious Firefly Cave");
 }
 
 void	load_image4(t_data *data)
@@ -310,6 +313,50 @@ void	draw_map_helper(t_data *data, void ***ptr, void **arr)
 	}
 }
 
+void	draw_chunck(t_data *data)
+{
+	int		i;
+	int		j;
+	int		x;
+	int		y;
+	void	*img;
+
+	y = data->player_possition[0] - 5;
+	x = data->player_possition[1] - 10;
+	if (y < 0)
+		y = -1;
+	if (x < 0)
+		x = -1;
+	i = -1;
+	while (++i < 10)
+	{
+		j = -1;
+		while (++j < 20)
+		{
+			img = get_tile(data, (*ptr)[y + i][x + j], arr);
+			if (!img)
+				mlx_put_image_to_window(data->mlx, data->win, \
+				data->img->unknown_tile, j * 50, i * 50);
+			else
+				mlx_put_image_to_window(data->mlx, data->win, img, \
+				j * 50, i * 50);
+			x++;
+		}
+		y++;
+	}
+	if (x > 0)
+		x = 10;
+	else
+		x = data->player_possition[0];
+	if (y > 0)
+		y = 5;
+	else
+		y = data->player_possition[1];
+	mlx_put_image_to_window(data->mlx, data->win, data->img->\
+	player[data->direction][(data->time / 10) % 4], \
+	x * 50, y * 50);
+}
+
 void	draw_map(t_data *data)
 {
 	void	***ptr;
@@ -325,7 +372,10 @@ void	draw_map(t_data *data)
 		ptr = &data->map_copy;
 		arr = data->img->outside_tiles;
 	}
-	draw_map_helper(data, ptr, arr);
+	if (data->design_mode)
+		draw_chunck(data, ptr, arr);
+	else
+		draw_map_helper(data, ptr, arr);
 }
 
 void	print_on_screen(t_data *data)
@@ -384,9 +434,6 @@ void	move_player(int keycode, t_data *data, char **map)
 	if (keycode == 2 || keycode == 12 || keycode == 1 || keycode == 13 \
 	|| keycode == 124 || keycode == 123 || keycode == 125 || keycode == 126)
 		data->player_move_count++;
-	mlx_put_image_to_window(data->mlx, data->win, data->img->\
-	player[data->direction][(data->time / 10) % 4], \
-	data->player_possition[0] * 50, data->player_possition[1] * 50);
 }
 
 void	do_tile_action(t_data *data, char ****ptr)
@@ -436,6 +483,12 @@ int	key_press(int keycode, t_data *data)
 	, arr), data->player_possition[1] * 50, data->player_possition[0] * 50);
 	move_player(keycode, data, data->map);
 	do_tile_action(data, ptr);
+	if (data->design_mode)
+		draw_map(data);
+	else
+		mlx_put_image_to_window(data->mlx, data->win, data->img->\
+		player[data->direction][(data->time / 10) % 4], \
+		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	print_on_screen(data);
 	return (0);
 }

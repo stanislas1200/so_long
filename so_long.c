@@ -70,6 +70,7 @@ void	data_setup(t_data *data)
 	data->map_width = 0;
 	data->direction = 0;
 	data->time = 0;
+	data->design_mode = 0;
 }
 
 int	main(int ac, char **av)
