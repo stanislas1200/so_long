@@ -72,37 +72,6 @@ void	data_setup(t_data *data)
 	data->time = 0;
 }
 
-void	print_map(char **map)
-{
-	int	i;
-
-	i = 0;
-	int j = 0;
-	while (map[i])
-	{
-		j = 0;
-		printf("{");
-		while (map[i][j])
-		{
-			// if (data->map_copy[i][j] == 'P')
-			// 	printf("\x1b[1;35m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'E')
-			// 	printf("\x1b[1;31m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'C' && data->map[i][j] == 'A')
-			// 	printf("\x1b[1;36m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map_copy[i][j] == 'C')
-			// 	printf("\x1b[1;33m%c\x1b[0m", data->map_copy[i][j]);
-			// else if (data->map[i][j] == 'A')
-			// 	printf("\x1b[1;32m%c\x1b[0m", data->map_copy[i][j]);
-			// else
-				printf("\"%c\",", map[i][j]);
-			j++;
-		}
-		printf("}\n");
-		i++;
-	}
-}
-
 int	main(int ac, char **av)
 {
 	t_data	*data;

@@ -26,9 +26,13 @@ typedef struct s_img
 	int		img_width;
 	int		img_height;
 	void	*exit_tile;
+	void	*exit_tile0;
+	void	*exit_tile1;
+	void	*exit_tile2;
+	void	*exit_tile3;
 	void	*unknown_tile;
 	/*outside*/
-	void	*outside_tiles[17];
+	void	*outside_tiles[18];
 	void	*floor;
 	void	*wall_floor;
 	void	*wall_otop_corner_left;
@@ -44,11 +48,11 @@ typedef struct s_img
 	void	*wall_down;
 	void	*wall_top;
 	void	*wall_solo;
-	void	*collectible[3];
+	void	*door;
 	void	*collectible0;
 	void	*collectible1;
 	/*cave*/
-	void	*inside_tiles[17];
+	void	*inside_tiles[18];
 	void	*cave_floor;
 	void	*cave_wall_floor;
 	void	*cave_wall_otop_corner_left;
@@ -64,7 +68,7 @@ typedef struct s_img
 	void	*cave_wall_down;
 	void	*cave_wall_top;
 	void	*cave_wall_solo;
-	void	*cave_collectible[3];
+	void	*door;
 	void	*cave_collectible0;
 	void	*cave_collectible1;
 	/*---*/
