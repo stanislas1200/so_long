@@ -51,6 +51,14 @@ int	update_frame(t_data *data)
 {
 	if (data->time >= 1000)
 		data->time = 0;
+	t_trap *current = data->trap_list;
+    while (current != NULL)
+    {
+        current->frame = (current->frame + data->time) % 1001;
+		mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
+		current->x * 50, current->y * 50);
+        current = current->next;
+    }
 	if (data->cave)
 		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
@@ -489,6 +497,21 @@ int	key_press(int keycode, t_data *data)
 		mlx_put_image_to_window(data->mlx, data->win, data->img->\
 		player[data->direction][(data->time / 10) % 4], \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
+	t_trap *current = data->trap_list;
+    while (current != NULL)
+    {
+        if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
+		{
+			if (current->frame % 6 > 3 && current->frame % 6 < 6)
+			{	
+				printf("You lose!\n");
+				exit(0);
+			}
+			else
+				break;
+		}
+        current = current->next;
+    }
 	print_on_screen(data);
 	return (0);
 }

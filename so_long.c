@@ -24,6 +24,14 @@ void	free_more(t_data *data)
 	}
 	if (data->img)
 		free(data->img);
+	while (data->trap_list)
+	{
+		t_trap	*tmp;
+
+		tmp = data->trap_list;
+		data->trap_list = data->trap_list->next;
+		free(tmp);
+	}
 	if (data)
 		free(data);
 }
@@ -57,6 +65,7 @@ void	data_setup(t_data *data)
 	data->player_possition = NULL;
 	data->exit_possition = NULL;
 	data->img = NULL;
+	data->trap_list = NULL;
 	data->printed = 0;
 	data->cave = 0;
 	data->player_nbr = 0;
@@ -91,7 +100,7 @@ int	main(int ac, char **av)
 		{
 			if (data->reachable_end)
 			{
-				start_game(data);
+				map_setup(data); //start_game(data);
 			}
 			else
 			{

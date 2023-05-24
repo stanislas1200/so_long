@@ -97,6 +97,14 @@ typedef struct s_img
 	/*---*/
 }	t_img;
 
+typedef struct s_trap
+{
+	int		x;
+	int		y;
+	int		frame;
+	struct s_trap* next;
+}	t_trap;
+
 typedef struct s_data
 {
 	/*mlx*/
@@ -108,6 +116,10 @@ typedef struct s_data
 	int		player_move_count;
 	int		player_frame;
 	int		direction;
+	/*trap*/
+	t_trap	*trap_list;
+	int		**trap;
+	int		trap_nbr;
 	/*map*/
 	char	**map;
 	char	**map_copy;
@@ -132,7 +144,6 @@ typedef struct s_data
 
 void	pg(char **map, int *start, int *end, t_data *data);
 void	start_game(t_data *data);
-void	print_map(char **map);
 int		check_access(t_data *data, int *start, int *end);
 void	pg2(char **map, int *start, int *end, t_data *data);
 void	map_setup(t_data *data);

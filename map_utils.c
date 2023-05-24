@@ -88,6 +88,36 @@ void	generate_cave(t_data *data, int i, int j)
 	}
 }
 
+void	generate_trap(t_data *data, int i, int j)
+{
+	if (data->map[i][j] != '1' && data->map[i][j] != '#' && rand() % 100 < 5)
+	{
+		t_trap* newTrap = (t_trap*)malloc(sizeof(t_trap));
+		if (!newTrap)
+			{
+				free_all(data);
+				exit(1);
+			}
+		newTrap->x = i;
+		newTrap->y = j;
+		newTrap->frame = rand() %1001;
+		newTrap->next = NULL;
+		if (data->trap_list == NULL)
+		{
+			data->trap_list = newTrap;
+		}
+		else
+		{
+			t_trap* current = data->trap_list;
+			while (current->next != NULL)
+			{
+				current = current->next;
+			}
+			current->next = newTrap;
+		}
+	}
+}
+
 void	map_setup(t_data *data)
 {
 	int	i;
@@ -99,6 +129,7 @@ void	map_setup(t_data *data)
 		j = -1;
 		while (data->map_copy[i][++j])
 		{
+			generate_trap(data, i, j);
 			if (data->map_cave[i][j] == '0')
 				data->map_cave[i][j] = 'H';
 			if (data->map_copy[i][j] == '0')

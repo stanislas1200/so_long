@@ -39,7 +39,7 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 		if (i != data->map_width)
 		{
 			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d and \
-			%d\x1b[0m doesn't have the same lenght\n", data->map_height, \
+%d\x1b[0m doesn't have the same lenght\n", data->map_height, \
 			data->map_height + 1);
 			free(all_line);
 			return (free_gnl(line, fd));
