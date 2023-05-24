@@ -47,6 +47,28 @@ char	*ft_itoa(int nbr)
 	return (str);
 }
 
+void	move_enemy(t_data *data, t_enemy *enemy)
+{
+	int	*pos;
+
+	pos = (int []){enemy->x, enemy->y};
+	if (enemy->direction == 0)
+		pos[1] -= 1;
+	else if (enemy->direction == 1)
+		pos[0] += 1;
+	else if (enemy->direction == 2)
+		pos[1] += 1;
+	else if (enemy->direction == 3)
+		pos[0] -= 1;
+	if (data->map[pos[1]][pos[0]] == '1' || data->map[pos[1]][pos[0]] == '#')
+	{
+		enemy->direction = (enemy->direction + 1) % 4;
+		return ;
+	}
+	enemy->x = pos[0];
+	enemy->y = pos[1];
+}
+
 int	update_frame(t_data *data)
 {
 	if (data->time >= 1000)
@@ -59,6 +81,22 @@ int	update_frame(t_data *data)
 		current->x * 50, current->y * 50);
         current = current->next;
     }
+	t_enemy *current2 = data->enemy_list;
+	while (current2 != NULL)
+	{
+		current2->frame = (current2->frame + data->time) % 1001;
+		if (current2->frame == 500 || current2->frame == 0)
+			move_enemy(data, current2);
+		if (data->cave)
+			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+			current2->x * 50, current2->y * 50);
+		else
+			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+			current2->x * 50, current2->y * 50);
+		mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current2->direction][(current2->frame / 10) % 4], \
+		current2->x * 50, current2->y * 50);
+		current2 = current2->next;
+	}
 	if (data->cave)
 		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);

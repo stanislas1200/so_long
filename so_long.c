@@ -32,6 +32,14 @@ void	free_more(t_data *data)
 		data->trap_list = data->trap_list->next;
 		free(tmp);
 	}
+	while (data->enemy_list)
+	{
+		t_enemy	*tmp;
+
+		tmp = data->enemy_list;
+		data->enemy_list = data->enemy_list->next;
+		free(tmp);
+	}
 	if (data)
 		free(data);
 }
@@ -66,6 +74,7 @@ void	data_setup(t_data *data)
 	data->exit_possition = NULL;
 	data->img = NULL;
 	data->trap_list = NULL;
+	data->enemy_list = NULL;
 	data->printed = 0;
 	data->cave = 0;
 	data->player_nbr = 0;

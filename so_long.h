@@ -102,8 +102,17 @@ typedef struct s_trap
 	int		x;
 	int		y;
 	int		frame;
-	struct s_trap* next;
+	struct	s_trap* next;
 }	t_trap;
+
+typedef struct s_enemy
+{
+	int		x;
+	int		y;
+	int		frame;
+	int		direction;
+	struct	s_enemy* next;
+}	t_enemy;
 
 typedef struct s_data
 {
@@ -118,8 +127,8 @@ typedef struct s_data
 	int		direction;
 	/*trap*/
 	t_trap	*trap_list;
-	int		**trap;
-	int		trap_nbr;
+	/*enemy*/
+	t_enemy	*enemy_list;
 	/*map*/
 	char	**map;
 	char	**map_copy;

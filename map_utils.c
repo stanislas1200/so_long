@@ -88,33 +88,69 @@ void	generate_cave(t_data *data, int i, int j)
 	}
 }
 
-void	generate_trap(t_data *data, int i, int j)
+void	generate_enemy(t_data *data, int i, int j)
 {
-	if (data->map[i][j] != '1' && data->map[i][j] != '#' && rand() % 100 < 5)
+	if (rand() % 100 < 1)
 	{
-		t_trap* newTrap = (t_trap*)malloc(sizeof(t_trap));
-		if (!newTrap)
+		t_enemy* newEnemy = (t_enemy*)malloc(sizeof(t_enemy));
+		if (!newEnemy)
 			{
 				free_all(data);
 				exit(1);
 			}
-		newTrap->x = i;
-		newTrap->y = j;
-		newTrap->frame = rand() %1001;
-		newTrap->next = NULL;
-		if (data->trap_list == NULL)
+		newEnemy->x = i;
+		newEnemy->y = j;
+		newEnemy->frame = rand() %1001;
+		newEnemy->direction = rand() %4;
+		newEnemy->next = NULL;
+		if (data->enemy_list == NULL)
 		{
-			data->trap_list = newTrap;
+			data->enemy_list = newEnemy;
 		}
 		else
 		{
-			t_trap* current = data->trap_list;
+			t_enemy* current = data->enemy_list;
 			while (current->next != NULL)
 			{
 				current = current->next;
 			}
-			current->next = newTrap;
+			current->next = newEnemy;
 		}
+	}
+}
+
+void	generate_trap(t_data *data, int i, int j)
+{
+	if (data->map[i][j] != '1' && data->map[i][j] != '#')
+	{
+		if (rand() % 100 < 5)
+		{
+			t_trap* newTrap = (t_trap*)malloc(sizeof(t_trap));
+			if (!newTrap)
+				{
+					free_all(data);
+					exit(1);
+				}
+			newTrap->x = i;
+			newTrap->y = j;
+			newTrap->frame = rand() %1001;
+			newTrap->next = NULL;
+			if (data->trap_list == NULL)
+			{
+				data->trap_list = newTrap;
+			}
+			else
+			{
+				t_trap* current = data->trap_list;
+				while (current->next != NULL)
+				{
+					current = current->next;
+				}
+				current->next = newTrap;
+			}
+		}
+		else
+			generate_enemy(data, i, j);
 	}
 }
 
