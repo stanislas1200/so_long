@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 16:38:24 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 12:36:51 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ typedef struct s_img
 {
 	int		img_width;
 	int		img_height;
+	void	**exit_on[4];
 	void	*exit_tile;
 	void	*exit_tile0;
 	void	*exit_tile1;
@@ -72,8 +73,12 @@ typedef struct s_img
 	void	*cave_collectible0;
 	void	*cave_collectible1;
 	/*---*/
+	/*trap*/
+	void	**trap[6];
 	/*player*/
 	void	**player[5][5];
+	/*enemy*/
+	void	*enemy_right_0;
 	// void	*player_up[5];
 	void	*player_up_0;
 	void	*player_up_1;

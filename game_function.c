@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 17:39:46 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 13:56:36 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,30 +71,76 @@ void	move_enemy(t_data *data, t_enemy *enemy)
 
 int	update_frame(t_data *data)
 {
+	if (data->collectible_nbr == 0)
+	{
+		if (data->cave && data->map_cave[data->exit_possition[0]][data->exit_possition[1]] != '5')
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+				data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+		else if (!data->cave && data->map_copy[data->exit_possition[0]][data->exit_possition[1]] != '5')
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+				data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+	}
 	if (data->time >= 1000)
 		data->time = 0;
 	t_trap *current = data->trap_list;
     while (current != NULL)
     {
-        current->frame = (current->frame + data->time) % 1001;
-		mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
-		current->x * 50, current->y * 50);
+        current->frame = (current->frame + 1) % 1001;
+		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
+		{
+			if (current->frame % 6 == 5)
+			{	
+				printf("You lose!\n");
+				exit(0);
+			}
+		}
+		if (data->cave && data->map_cave[current->y][current->x] != '5')
+		{
+			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+			current->x * 50, current->y * 50);
+			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
+			current->x * 50, current->y * 50);
+		}
+		else if (!data->cave && data->map_copy[current->y][current->x] != '5')
+		{
+			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+			current->x * 50, current->y * 50);
+			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
+			current->x * 50, current->y * 50);
+		}
         current = current->next;
     }
 	t_enemy *current2 = data->enemy_list;
 	while (current2 != NULL)
 	{
 		current2->frame = (current2->frame + data->time) % 1001;
-		if (current2->frame == 500 || current2->frame == 0)
-			move_enemy(data, current2);
-		if (data->cave)
-			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+		if (current2->x == data->player_possition[0] && current2->y == data->player_possition[1])
+		{
+			printf("You lose!\n");
+			exit(0);
+		}
+		if (data->cave && data->map_cave[current2->y][current2->x] != '5')
+		{
+			if ((current2->frame) % 50 == 0)
+			{
+				mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+				current2->x * 50, current2->y * 50);
+				move_enemy(data, current2);
+			}
+			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy_right_0, \
 			current2->x * 50, current2->y * 50);
-		else
-			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+		}
+		else if (!data->cave && data->map_copy[current2->y][current2->x] != '5')
+		{
+			if ((current2->frame) % 50 == 0)
+			{
+				mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+				current2->x * 50, current2->y * 50);
+				move_enemy(data, current2);
+			}
+			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy_right_0, \
 			current2->x * 50, current2->y * 50);
-		mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current2->direction][(current2->frame / 10) % 4], \
-		current2->x * 50, current2->y * 50);
+		}
 		current2 = current2->next;
 	}
 	if (data->cave)
@@ -122,155 +168,89 @@ void	setting_mlx(t_data *data)
 
 void	load_image4(t_data *data)
 {
-	data->img->player_right_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	player/fireflyRight.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_right_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	player/fireflyRight1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_right_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	player/fireflyRight2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_right_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	player/fireflyRight3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_right_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_right_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_right_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_right_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy_right_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[4] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap4.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[5] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap5.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_on[0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_on[1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_on[2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_on[3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on3.xpm", &data->img->img_width, &data->img->img_height);
 }
 
-void	laod_image3(t_data *data)
+void	load_image3(t_data *data)
 {
-	data->img->cave_wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./\
-	data/texture/cave/cave_wall_itop_corner_right.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./\
-	data/texture/cave/cave_wall_idown_corner_left.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, ".\
-	/data/texture/cave/cave_wall_idown_corner_right.xpm", &data->img->img_width \
-	, &data->img->img_height);
-	data->img->cave_wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	cave/cave_wall_down.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/c\
-	ave/cave_wall_top.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	cave/cave_wall_left.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture\
-	/cave/cave_wall_right.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	cave/cave_wall_solo.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->door = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/door.\
-	xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_down_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyDown.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_down_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyDown1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_down_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyDown2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_down_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyDown3.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_up_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/pla\
-	yer/fireflyUp.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_up_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/pla\
-	yer/fireflyUp1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_up_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/pla\
-	yer/fireflyUp2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_up_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/pla\
-	yer/fireflyUp3.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_left_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyLeft.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_left_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyLeft1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_left_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyLeft2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->player_left_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/p\
-	layer/fireflyLeft3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_idown_corner_right.xpm", &data->img->img_width , &data->img->img_height);
+	data->img->cave_wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_down.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_top.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_solo.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_door = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_door.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_down_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyDown.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_down_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyDown1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_down_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyDown2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_down_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyDown3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_up_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyUp.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_up_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyUp1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_up_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyUp2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_up_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyUp3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_left_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyLeft.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_left_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyLeft1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_left_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyLeft2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->player_left_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyLeft3.xpm", &data->img->img_width, &data->img->img_height);
 	load_image4(data);
 }
 
 void	load_image2(t_data *data)
 {
-	data->img->wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/outsi\
-	de/wall_solo.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->door = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/do\
-	or.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other\
-	/portal.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->exit_tile0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/othe\
-	r/portal_on0.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->exit_tile1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/othe\
-	r/portal_on1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->exit_tile2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/othe\
-	\
-	r/portal_on2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->exit_tile3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/othe\
-	r/portal_on3.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->unknown_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/ot\
-	her/unknown_tile.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/textu\
-	re/cave/cave_collectible0.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/textur\
-	e/cave/cave_collectible1.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave\
-	/cave_floor.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture\
-	/cave/cave_wall_floor.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->cave_wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./d\
-	ata/texture/cave/cave_wall_otop_corner_left.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./\
-	data/texture/cave/cave_wall_otop_corner_right.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./\
-	data/texture/cave/cave_wall_odown_corner_left.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->cave_wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, ".\
-	/data/texture/cave/cave_wall_odown_corner_right.xpm", &data->img->img_width \
-	, &data->img->img_height);
-	data->img->cave_wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./d\
-	ata/texture/cave/cave_wall_itop_corner_left.xpm", &data->img->img_width, \
-	&data->img->img_height);
+	data->img->wall_solo = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_solo.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->door = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/door.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_tile0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_tile1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_tile2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->exit_tile3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->unknown_tile = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/unknown_tile.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_collectible1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->cave_wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_odown_corner_right.xpm", &data->img->img_width , &data->img->img_height);
+	data->img->cave_wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/cave/cave_wall_itop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
 	load_image3(data);
 }
 
 void	load_image(t_data *data)
 {
-	data->img->collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	outside/collectible0.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/\
-	outside/collectible1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside\
-	/floor.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/ou\
-	tside/wall_floor.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_otop_corner_left.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_otop_corner_right.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_odown_corner_left.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./dat\
-	a/texture/outside/wall_odown_corner_right.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/\
-	texture/outside/wall_itop_corner_left.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_itop_corner_right.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_idown_corner_left.xpm", &data->img->img_width, &data->\
-	img->img_height);
-	data->img->wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data\
-	/texture/outside/wall_idown_corner_right.xpm", &data->img->img_width, \
-	&data->img->img_height);
-	data->img->wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/outsi\
-	de/wall_down.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/outsid\
-	e/wall_top.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outsi\
-	de/wall_left.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outs\
-	ide/wall_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->collectible0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/collectible0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->collectible1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/collectible1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_floor = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_floor.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_otop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_otop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_otop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_otop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_odown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_odown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_odown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_odown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_itop_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_itop_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_itop_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_itop_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_idown_corner_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_idown_corner_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_idown_corner_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_idown_corner_right.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_down = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_down.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_top = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_top.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_left = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_left.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->wall_right = mlx_xpm_file_to_image(data->mlx, "./data/texture/outside/wall_right.xpm", &data->img->img_width, &data->img->img_height);
 	load_image2(data);
 }
 
@@ -336,7 +316,7 @@ void	*get_tile(t_data *data, char tile, void **arr)
 		return (get_tile_helper(data, tile, arr));
 }
 
-void	draw_map_helper(t_data *data, void ***ptr, void **arr)
+void	draw_map_helper(t_data *data, char ***ptr, void **arr)
 {
 	int		i;
 	int		j;
@@ -348,6 +328,9 @@ void	draw_map_helper(t_data *data, void ***ptr, void **arr)
 		j = -1;
 		while ((*ptr)[i][++j])
 		{
+			if ((*ptr)[i][j] == 'E')
+				mlx_put_image_to_window(data->mlx, data->win, arr[14], \
+						j * 50, i * 50);
 			img = get_tile(data, (*ptr)[i][j], arr);
 			if (!img)
 				mlx_put_image_to_window(data->mlx, data->win, \
@@ -359,7 +342,7 @@ void	draw_map_helper(t_data *data, void ***ptr, void **arr)
 	}
 }
 
-void	draw_chunck(t_data *data)
+void	draw_chunck(t_data *data, char ***ptr, void **arr)
 {
 	int		i;
 	int		j;
@@ -381,8 +364,7 @@ void	draw_chunck(t_data *data)
 		{
 			img = get_tile(data, (*ptr)[y + i][x + j], arr);
 			if (!img)
-				mlx_put_image_to_window(data->mlx, data->win, \
-				data->img->unknown_tile, j * 50, i * 50);
+				printf("NULL\n");
 			else
 				mlx_put_image_to_window(data->mlx, data->win, img, \
 				j * 50, i * 50);
@@ -405,7 +387,7 @@ void	draw_chunck(t_data *data)
 
 void	draw_map(t_data *data)
 {
-	void	***ptr;
+	char	***ptr;
 	void	**arr;
 
 	if (data->cave)
@@ -482,7 +464,7 @@ void	move_player(int keycode, t_data *data, char **map)
 		data->player_move_count++;
 }
 
-void	do_tile_action(t_data *data, char ****ptr)
+void	do_tile_action(t_data *data, char ***ptr)
 {
 	if ((*ptr)[data->player_possition[1]][data->player_possition[0]] == 'C')
 	{
@@ -495,12 +477,12 @@ void	do_tile_action(t_data *data, char ****ptr)
 		if (data->cave)
 		{
 			data->cave = 0;
-			data->player_possition[0] = data->player_possition[0] - 1;
+			data->player_possition[1] = data->player_possition[1] - 1;
 		}
 		else
 		{
 			data->cave = 1;
-			data->player_possition[0] = data->player_possition[0] + 1;
+			data->player_possition[1] = data->player_possition[1] + 1;
 		}
 		draw_map(data);
 	}
@@ -526,7 +508,7 @@ int	key_press(int keycode, t_data *data)
 	}
 	mlx_put_image_to_window(data->mlx, data->win, \
 	get_tile(data, (*ptr)[data->player_possition[1]][data->player_possition[0]] \
-	, arr), data->player_possition[1] * 50, data->player_possition[0] * 50);
+	, arr), data->player_possition[0] * 50, data->player_possition[1] * 50);
 	move_player(keycode, data, data->map);
 	do_tile_action(data, ptr);
 	if (data->design_mode)
@@ -540,7 +522,7 @@ int	key_press(int keycode, t_data *data)
     {
         if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
 		{
-			if (current->frame % 6 > 3 && current->frame % 6 < 6)
+			if (current->frame % 6 > 3)
 			{	
 				printf("You lose!\n");
 				exit(0);
@@ -560,6 +542,8 @@ void	image_setup3(t_data *data)
 	data->img->player[3][1] = data->img->player_right_1;
 	data->img->player[3][2] = data->img->player_right_2;
 	data->img->player[3][3] = data->img->player_right_3;
+	// data->img->enemy_right_0 = data->img->enemy_right_0;
+	// data->img->trap = data->img->trap;
 }
 
 void	image_setup2(t_data *data)

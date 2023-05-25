@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   map_utils.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/05/25 13:26:49 by sgodin            #+#    #+#             */
+/*   Updated: 2023/05/25 13:26:50 by sgodin           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "so_long.h"
 
 char	get_corner_tile(char **map, t_data *data, int i, int j)
@@ -65,6 +77,32 @@ void	set_tile(char ***map, t_data *data)
 	set_corner_tile(map, data);
 }
 
+void	check_trap(t_data *data,int i,int j)
+{
+	t_trap *tmp = data->trap_list->next;
+	t_trap *current = data->trap_list;
+	if (current != NULL)
+	{
+		if (current->x == j && current->y == i)
+		{
+			free(data->trap_list);
+			current = tmp;
+		}
+		tmp = current;
+		current = current->next;
+	}
+    while (current != NULL)
+    {
+        if (current->x == j && current->y == i)
+		{
+			tmp->next = current->next;
+			free(current);
+		}
+		tmp = current;
+        current = current->next;
+    }
+}
+
 void	generate_cave(t_data *data, int i, int j)
 {
 	if (i > data->map_height / 4 && i < data->map_height -4 && \
@@ -83,6 +121,7 @@ void	generate_cave(t_data *data, int i, int j)
 				pg(data->map_copy, (int []){j, i + 1}, NULL, data);
 				data->map_copy[i][j] = '-';
 				data->map_cave[i][j] = '-';
+				check_trap(data, i, j);
 			}
 		}
 	}
@@ -98,8 +137,8 @@ void	generate_enemy(t_data *data, int i, int j)
 				free_all(data);
 				exit(1);
 			}
-		newEnemy->x = i;
-		newEnemy->y = j;
+		newEnemy->x = j;
+		newEnemy->y = i;
 		newEnemy->frame = rand() %1001;
 		newEnemy->direction = rand() %4;
 		newEnemy->next = NULL;
@@ -121,7 +160,7 @@ void	generate_enemy(t_data *data, int i, int j)
 
 void	generate_trap(t_data *data, int i, int j)
 {
-	if (data->map[i][j] != '1' && data->map[i][j] != '#')
+	if (data->map[i][j] != '1' && data->map[i][j] != '#' && data->map[i][j] != 'C' && data->map[i][j] != 'E')
 	{
 		if (rand() % 100 < 5)
 		{
@@ -131,8 +170,8 @@ void	generate_trap(t_data *data, int i, int j)
 					free_all(data);
 					exit(1);
 				}
-			newTrap->x = i;
-			newTrap->y = j;
+			newTrap->x = j;
+			newTrap->y = i;
 			newTrap->frame = rand() %1001;
 			newTrap->next = NULL;
 			if (data->trap_list == NULL)

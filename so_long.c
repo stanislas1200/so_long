@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/20 16:34:46 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 13:26:05 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,7 +109,7 @@ int	main(int ac, char **av)
 		{
 			if (data->reachable_end)
 			{
-				map_setup(data); //start_game(data);
+				start_game(data);
 			}
 			else
 			{
