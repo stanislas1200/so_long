@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 17:24:56 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 18:27:12 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,26 @@ int	update_frame(t_data *data)
 	}
 	if (data->time >= 1000)
 		data->time = 0;
-	if (data->cave)
-		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
-		data->player_possition[0] * 50, data->player_possition[1] * 50);
+	if (data->design_mode)
+	{
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 4 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
+			{if (data->cave)
+				mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+				10 * 50, 5 * 50);
+			else
+				mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+				10 * 50, 5 * 50);}
+	}
 	else
-		mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
-		data->player_possition[0] * 50, data->player_possition[1] * 50);
+	{
+		if (data->cave)
+			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+			data->player_possition[0] * 50, data->player_possition[1] * 50);
+		else
+			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+			data->player_possition[0] * 50, data->player_possition[1] * 50);
+	}
+	
 	t_trap *current = data->trap_list;
     while (current != NULL)
     {
@@ -145,9 +159,17 @@ int	update_frame(t_data *data)
 		}
 		current2 = current2->next;
 	}
-	mlx_put_image_to_window(data->mlx, data->win, data->img->\
-	player[data->direction][(data->time / 10) % 4], data->player_possition[0] * \
-	50, data->player_possition[1] * 50);
+	if (data->design_mode)
+	{
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 4)
+		{mlx_put_image_to_window(data->mlx, data->win, data->img->\
+		player[data->direction][(data->time / 10) % 4], \
+		10 * 50, 5 * 50);}
+	}
+	else 
+		mlx_put_image_to_window(data->mlx, data->win, data->img->\
+		player[data->direction][(data->time / 10) % 4], data->player_possition[0] * \
+		50, data->player_possition[1] * 50);
 	data->time++;
 	return (0);
 }
@@ -368,8 +390,12 @@ void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 	x = data->player_possition[0] - 10;
 	if (-1 + y < 0)
 		y = 0;
-	if (-1 + x < 0)
+	if (-1 + x < 0 )
 		x = 0;
+	if (10 + y > data->map_height)
+		y = data->map_height - 10;
+	if (20 + x > data->map_width)
+		x = data->map_width - 20;
 	i = -1;
 	while (++i < 10)
 	{
@@ -390,14 +416,20 @@ void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 		// y++;
 	}
 		printf("\n");
-	if (x > 0)
+	printf("%d %d %d\n", x, y, data->map_width - 20);
+	if (x > 0 && x < data->map_width - 21)
 		x = 10;
+	else if (x > data->map_width - 21)
+		x = data->player_possition[0] - data->map_width + 20;
 	else
 		x = data->player_possition[0];
-	if (y > 0)
+	if (y > 0 && y < data->map_height - 11)
 		y = 5;
+	else if (y > data->map_height - 12)
+		y = data->player_possition[1] - data->map_height+10;
 	else
 		y = data->player_possition[1];
+	printf("%d %d %d\n", x, y, data->player_possition[0]);
 	mlx_put_image_to_window(data->mlx, data->win, data->img->\
 	player[data->direction][(data->time / 10) % 4], \
 	x * 50, y * 50);
