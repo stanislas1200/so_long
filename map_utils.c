@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:26:49 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 13:26:50 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 15:43:01 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,10 @@ void	generate_enemy(t_data *data, int i, int j)
 
 void	generate_trap(t_data *data, int i, int j)
 {
-	if (data->map[i][j] != '1' && data->map[i][j] != '#' && data->map[i][j] != 'C' && data->map[i][j] != 'E')
+	if (data->map[i][j] != '1' && data->map[i][j] != '#' && data->map[i][j] != 'C' && data->map[i][j] != 'E' && data->map_copy[i][j] != 'C' && data->map_cave[i][j] != 'C' && data->player_possition[0] != j)
 	{
+		if (data->map_copy[i-1][j] == '-' || data->map_copy[i+1][j] == '-')
+			return ;
 		if (rand() % 100 < 5)
 		{
 			t_trap* newTrap = (t_trap*)malloc(sizeof(t_trap));

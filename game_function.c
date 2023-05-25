@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 13:56:36 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/25 17:24:56 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,14 +55,14 @@ void	move_enemy(t_data *data, t_enemy *enemy)
 	if (enemy->direction == 0)
 		pos[1] -= 1;
 	else if (enemy->direction == 1)
-		pos[0] += 1;
-	else if (enemy->direction == 2)
 		pos[1] += 1;
+	else if (enemy->direction == 2)
+		pos[0] += 1;
 	else if (enemy->direction == 3)
 		pos[0] -= 1;
 	if (data->map[pos[1]][pos[0]] == '1' || data->map[pos[1]][pos[0]] == '#')
 	{
-		enemy->direction = (enemy->direction + 1) % 4;
+		enemy->direction = (enemy->direction + rand()) % 4;
 		return ;
 	}
 	enemy->x = pos[0];
@@ -82,13 +82,19 @@ int	update_frame(t_data *data)
 	}
 	if (data->time >= 1000)
 		data->time = 0;
+	if (data->cave)
+		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+		data->player_possition[0] * 50, data->player_possition[1] * 50);
+	else
+		mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	t_trap *current = data->trap_list;
     while (current != NULL)
     {
         current->frame = (current->frame + 1) % 1001;
 		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
 		{
-			if (current->frame % 6 == 5)
+			if ((current->frame / 10) % 9 == 7)
 			{	
 				printf("You lose!\n");
 				exit(0);
@@ -98,14 +104,14 @@ int	update_frame(t_data *data)
 		{
 			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
 			current->x * 50, current->y * 50);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
+			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
 			current->x * 50, current->y * 50);
 		}
 		else if (!data->cave && data->map_copy[current->y][current->x] != '5')
 		{
 			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
 			current->x * 50, current->y * 50);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 6], \
+			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
 			current->x * 50, current->y * 50);
 		}
         current = current->next;
@@ -113,7 +119,7 @@ int	update_frame(t_data *data)
 	t_enemy *current2 = data->enemy_list;
 	while (current2 != NULL)
 	{
-		current2->frame = (current2->frame + data->time) % 1001;
+		current2->frame = (current2->frame + 1) % 1001;
 		if (current2->x == data->player_possition[0] && current2->y == data->player_possition[1])
 		{
 			printf("You lose!\n");
@@ -121,34 +127,24 @@ int	update_frame(t_data *data)
 		}
 		if (data->cave && data->map_cave[current2->y][current2->x] != '5')
 		{
-			if ((current2->frame) % 50 == 0)
-			{
-				mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
-				current2->x * 50, current2->y * 50);
+			mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+			current2->x * 50, current2->y * 50);
+			if ((current2->frame) % 10 == 0)
 				move_enemy(data, current2);
-			}
-			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy_right_0, \
+			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current2->direction][(current2->frame / 10) % 4], \
 			current2->x * 50, current2->y * 50);
 		}
 		else if (!data->cave && data->map_copy[current2->y][current2->x] != '5')
 		{
+			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+			current2->x * 50, current2->y * 50);
 			if ((current2->frame) % 50 == 0)
-			{
-				mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
-				current2->x * 50, current2->y * 50);
 				move_enemy(data, current2);
-			}
-			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy_right_0, \
+			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current2->direction][(current2->frame / 10) % 4], \
 			current2->x * 50, current2->y * 50);
 		}
 		current2 = current2->next;
 	}
-	if (data->cave)
-		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
-		data->player_possition[0] * 50, data->player_possition[1] * 50);
-	else
-		mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
-		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	mlx_put_image_to_window(data->mlx, data->win, data->img->\
 	player[data->direction][(data->time / 10) % 4], data->player_possition[0] * \
 	50, data->player_possition[1] * 50);
@@ -172,13 +168,31 @@ void	load_image4(t_data *data)
 	data->img->player_right_1 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight1.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->player_right_2 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight2.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->player_right_3 = mlx_xpm_file_to_image(data->mlx, "./data/texture/player/fireflyRight3.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->enemy_right_0 = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[0][0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_up0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[0][1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_up1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[0][2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_up2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[0][3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_up1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[1][0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_down0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[1][1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_down1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[1][2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_down2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[1][3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_down1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[3][0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_left0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[3][1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_left1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[3][2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_left2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[3][3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_left1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[2][0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[2][1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[2][2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->enemy[2][3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/enemy/enemy_right1.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->trap[0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap0.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->trap[1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap1.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->trap[2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap2.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->trap[3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap3.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->trap[4] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap4.xpm", &data->img->img_width, &data->img->img_height);
-	data->img->trap[5] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap5.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[3] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap0.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[4] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap1.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[5] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap2.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[6] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap3.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[7] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap4.xpm", &data->img->img_width, &data->img->img_height);
+	data->img->trap[8] = mlx_xpm_file_to_image(data->mlx, "./data/texture/trap5.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->exit_on[0] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on0.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->exit_on[1] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on1.xpm", &data->img->img_width, &data->img->img_height);
 	data->img->exit_on[2] = mlx_xpm_file_to_image(data->mlx, "./data/texture/other/portal_on2.xpm", &data->img->img_width, &data->img->img_height);
@@ -342,36 +356,40 @@ void	draw_map_helper(t_data *data, char ***ptr, void **arr)
 	}
 }
 
-void	draw_chunck(t_data *data, char ***ptr, void **arr)
+void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 {
 	int		i;
 	int		j;
 	int		x;
 	int		y;
-	void	*img;
+	void	*img = NULL;
 
-	y = data->player_possition[0] - 5;
-	x = data->player_possition[1] - 10;
-	if (y < 0)
-		y = -1;
-	if (x < 0)
-		x = -1;
+	y = data->player_possition[1] - 5;
+	x = data->player_possition[0] - 10;
+	if (-1 + y < 0)
+		y = 0;
+	if (-1 + x < 0)
+		x = 0;
 	i = -1;
 	while (++i < 10)
 	{
 		j = -1;
 		while (++j < 20)
 		{
-			img = get_tile(data, (*ptr)[y + i][x + j], arr);
+			printf("%d ", i + y);
+			img = get_tile(data, (*ptr)[i + y][j + x], arr);
 			if (!img)
-				printf("NULL\n");
+				mlx_put_image_to_window(data->mlx, data->win, \
+				data->img->unknown_tile, j * 50, i * 50);
 			else
 				mlx_put_image_to_window(data->mlx, data->win, img, \
 				j * 50, i * 50);
-			x++;
+			// x++;
 		}
-		y++;
+		printf("\n");
+		// y++;
 	}
+		printf("\n");
 	if (x > 0)
 		x = 10;
 	else
@@ -522,7 +540,7 @@ int	key_press(int keycode, t_data *data)
     {
         if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
 		{
-			if (current->frame % 6 > 3)
+			if ((current->frame / 10) % 9 == 7)
 			{	
 				printf("You lose!\n");
 				exit(0);
@@ -542,8 +560,6 @@ void	image_setup3(t_data *data)
 	data->img->player[3][1] = data->img->player_right_1;
 	data->img->player[3][2] = data->img->player_right_2;
 	data->img->player[3][3] = data->img->player_right_3;
-	// data->img->enemy_right_0 = data->img->enemy_right_0;
-	// data->img->trap = data->img->trap;
 }
 
 void	image_setup2(t_data *data)
