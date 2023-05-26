@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 18:27:12 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/26 14:44:16 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,20 +71,11 @@ void	move_enemy(t_data *data, t_enemy *enemy)
 
 int	update_frame(t_data *data)
 {
-	if (data->collectible_nbr == 0)
-	{
-		if (data->cave && data->map_cave[data->exit_possition[0]][data->exit_possition[1]] != '5')
-			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
-				data->exit_possition[0] * 50, data->exit_possition[1] * 50);
-		else if (!data->cave && data->map_copy[data->exit_possition[0]][data->exit_possition[1]] != '5')
-			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
-				data->exit_possition[0] * 50, data->exit_possition[1] * 50);
-	}
 	if (data->time >= 1000)
 		data->time = 0;
 	if (data->design_mode)
 	{
-		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 4 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
 			{if (data->cave)
 				mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
 				10 * 50, 5 * 50);
@@ -101,11 +92,33 @@ int	update_frame(t_data *data)
 			mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
 			data->player_possition[0] * 50, data->player_possition[1] * 50);
 	}
-	
+	//PORTAL
+	if (data->cave && data->map_cave[data->exit_possition[1]][data->exit_possition[0]] != '5' && !data->design_mode)
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->img->cave_floor, \
+		data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+		if (data->collectible_nbr == 0)
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+		else
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile, \
+			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+	}
+	else if (!data->cave && data->map_copy[data->exit_possition[1]][data->exit_possition[0]] != '5' && !data->design_mode)
+	{
+		mlx_put_image_to_window(data->mlx, data->win, data->img->floor, \
+		data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+		if (data->collectible_nbr == 0)
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+		else
+			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile, \
+			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+	}
 	t_trap *current = data->trap_list;
-    while (current != NULL)
-    {
-        current->frame = (current->frame + 1) % 1001;
+	while (current != NULL)
+	{
+		current->frame = (current->frame + 1) % 1001;
 		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
 		{
 			if ((current->frame / 10) % 9 == 7)
@@ -128,8 +141,8 @@ int	update_frame(t_data *data)
 			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
 			current->x * 50, current->y * 50);
 		}
-        current = current->next;
-    }
+		current = current->next;
+	}
 	t_enemy *current2 = data->enemy_list;
 	while (current2 != NULL)
 	{
@@ -161,7 +174,7 @@ int	update_frame(t_data *data)
 	}
 	if (data->design_mode)
 	{
-		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 4)
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
 		{mlx_put_image_to_window(data->mlx, data->win, data->img->\
 		player[data->direction][(data->time / 10) % 4], \
 		10 * 50, 5 * 50);}
@@ -176,6 +189,8 @@ int	update_frame(t_data *data)
 
 void	setting_mlx(t_data *data)
 {
+	if (data->map_height > 28 || data->map_width > 50)
+		data->design_mode = 1;
 	data->mlx = mlx_init();
 	if (data->design_mode)
 		data->win = mlx_new_window(data->mlx, 1000, 500, "The Mysterious Firefly Cave");
@@ -307,7 +322,12 @@ void	*get_tile_helper(t_data *data, char tile, void **arr)
 		return (arr[16]);
 	}
 	else if (tile == 'E')
-		return (data->img->exit_tile);
+	{
+		if (data->collectible_nbr == 0)
+			return (data->img->exit_on[(data->time / 10) % 4]);
+		else
+			return (data->img->exit_tile);
+	}
 	else if (tile == '-')
 		return (arr[17]);
 	else
@@ -410,16 +430,14 @@ void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 			else
 				mlx_put_image_to_window(data->mlx, data->win, img, \
 				j * 50, i * 50);
-			// x++;
 		}
 		printf("\n");
-		// y++;
 	}
 		printf("\n");
 	printf("%d %d %d\n", x, y, data->map_width - 20);
 	if (x > 0 && x < data->map_width - 21)
 		x = 10;
-	else if (x > data->map_width - 21)
+	else if (x > data->map_width - 22)
 		x = data->player_possition[0] - data->map_width + 20;
 	else
 		x = data->player_possition[0];
@@ -433,6 +451,37 @@ void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 	mlx_put_image_to_window(data->mlx, data->win, data->img->\
 	player[data->direction][(data->time / 10) % 4], \
 	x * 50, y * 50);
+}
+
+void	print_on_screen(t_data *data)
+{
+	// make to store then free ?
+	if (!data->design_mode)
+	{
+		char	***ptr;
+		void	**arr;
+		int		i = -1;
+
+		if (data->cave)
+		{
+			ptr = &data->map_cave;
+			arr = data->img->inside_tiles;
+		}
+		else
+		{
+			ptr = &data->map_copy;
+			arr = data->img->outside_tiles;
+		}
+		while(++i < 4)
+			mlx_put_image_to_window(data->mlx, data->win, \
+				get_tile(data, (*ptr)[0][i], arr), i * 50, 0);
+	}
+	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
+	mlx_string_put(data->mlx, data->win, 160, \
+	10, 136, ft_itoa(data->player_move_count));
+	mlx_string_put(data->mlx, data->win, 5, 25, 136, "Collected left: ");
+	mlx_string_put(data->mlx, data->win, 160, \
+	25, 136, ft_itoa(data->collectible_nbr));
 }
 
 void	draw_map(t_data *data)
@@ -454,17 +503,7 @@ void	draw_map(t_data *data)
 		draw_chunck(data, ptr, arr);
 	else
 		draw_map_helper(data, ptr, arr);
-}
-
-void	print_on_screen(t_data *data)
-{
-	// make to store then free ?
-	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
-	mlx_string_put(data->mlx, data->win, 160, \
-	10, 136, ft_itoa(data->player_move_count));
-	mlx_string_put(data->mlx, data->win, 5, 25, 136, "Collected left: ");
-	mlx_string_put(data->mlx, data->win, 160, \
-	25, 136, ft_itoa(data->collectible_nbr));
+	print_on_screen(data);
 }
 
 void	move_player2(int keycode, t_data *data, char **map)
@@ -568,9 +607,9 @@ int	key_press(int keycode, t_data *data)
 		player[data->direction][(data->time / 10) % 4], \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	t_trap *current = data->trap_list;
-    while (current != NULL)
-    {
-        if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
+	while (current != NULL)
+	{
+		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
 		{
 			if ((current->frame / 10) % 9 == 7)
 			{	
@@ -580,8 +619,8 @@ int	key_press(int keycode, t_data *data)
 			else
 				break;
 		}
-        current = current->next;
-    }
+		current = current->next;
+	}
 	print_on_screen(data);
 	return (0);
 }
@@ -669,3 +708,4 @@ void	start_game(t_data *data)
 	mlx_loop_hook(data->mlx, update_frame, data);
 	mlx_loop(data->mlx);
 }
+// exit after tile

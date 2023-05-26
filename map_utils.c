@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:26:49 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 17:39:02 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/26 14:33:34 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,7 +206,7 @@ void	map_setup(t_data *data)
 		j = -1;
 		while (data->map_copy[i][++j])
 		{
-			// generate_trap(data, i, j);
+			generate_trap(data, i, j);
 			if (data->map_cave[i][j] == '0')
 				data->map_cave[i][j] = 'H';
 			if (data->map_copy[i][j] == '0')

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 17:30:55 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/26 13:33:54 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ void	data_setup(t_data *data)
 	data->map_width = 0;
 	data->direction = 0;
 	data->time = 0;
-	data->design_mode = 1;
+	data->design_mode = 0;
 }
 
 int	main(int ac, char **av)
