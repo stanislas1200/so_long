@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/26 14:44:16 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/26 15:01:19 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -305,21 +305,21 @@ void	load_image(t_data *data)
 	load_image2(data);
 }
 
-void	*get_tile_helper(t_data *data, char tile, void **arr)
+void	*get_tile_helper(t_data *data, char tile)
 {
 	if (tile == 'A')
-		return (arr[11]);
+		return (data->arr[11]);
 	else if (tile == 'B')
-		return (arr[12]);
+		return (data->arr[12]);
 	else if (tile == 'D')
-		return (arr[13]);
+		return (data->arr[13]);
 	else if (tile == 'H' || tile == 'P')
-		return (arr[14]);
+		return (data->arr[14]);
 	else if (tile == 'C')
 	{
 		if ((data->time / 10) % 2)
-			return (arr[15]);
-		return (arr[16]);
+			return (data->arr[15]);
+		return (data->arr[16]);
 	}
 	else if (tile == 'E')
 	{
@@ -329,7 +329,7 @@ void	*get_tile_helper(t_data *data, char tile, void **arr)
 			return (data->img->exit_tile);
 	}
 	else if (tile == '-')
-		return (arr[17]);
+		return (data->arr[17]);
 	else
 		return (data->img->unknown_tile);
 }
@@ -344,50 +344,50 @@ void	*get_tile_helper(t_data *data, char tile, void **arr)
 	1A
 	BD
 	*/
-void	*get_tile(t_data *data, char tile, void **arr)
+void	*get_tile(t_data *data, char tile)
 {
 	if (tile == '2')
-		return (arr[0]);
+		return (data->arr[0]);
 	else if (tile == '3')
-		return (arr[1]);
+		return (data->arr[1]);
 	else if (tile == '4')
-		return (arr[2]);
+		return (data->arr[2]);
 	else if (tile == '0')
-		return (arr[3]);
+		return (data->arr[3]);
 	else if (tile == '5')
-		return (arr[4]);
+		return (data->arr[4]);
 	else if (tile == '6')
-		return (arr[5]);
+		return (data->arr[5]);
 	else if (tile == '7')
-		return (arr[6]);
+		return (data->arr[6]);
 	else if (tile == '8')
-		return (arr[7]);
+		return (data->arr[7]);
 	else if (tile == '9')
-		return (arr[8]);
+		return (data->arr[8]);
 	else if (tile == 'W')
-		return (arr[9]);
+		return (data->arr[9]);
 	else if (tile == '1')
-		return (arr[10]);
+		return (data->arr[10]);
 	else
-		return (get_tile_helper(data, tile, arr));
+		return (get_tile_helper(data, tile));
 }
 
-void	draw_map_helper(t_data *data, char ***ptr, void **arr)
+void	draw_map_helper(t_data *data)
 {
 	int		i;
 	int		j;
 	void	*img;
 
 	i = -1;
-	while ((*ptr)[++i])
+	while (data->ptr[++i])
 	{
 		j = -1;
-		while ((*ptr)[i][++j])
+		while (data->ptr[i][++j])
 		{
-			if ((*ptr)[i][j] == 'E')
-				mlx_put_image_to_window(data->mlx, data->win, arr[14], \
+			if (data->ptr[i][j] == 'E')
+				mlx_put_image_to_window(data->mlx, data->win, data->arr[14], \
 						j * 50, i * 50);
-			img = get_tile(data, (*ptr)[i][j], arr);
+			img = get_tile(data, data->ptr[i][j]);
 			if (!img)
 				mlx_put_image_to_window(data->mlx, data->win, \
 				data->img->unknown_tile, j * 50, i * 50);
@@ -398,7 +398,7 @@ void	draw_map_helper(t_data *data, char ***ptr, void **arr)
 	}
 }
 
-void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
+void	draw_chunck(t_data *data)
 {
 	int		i;
 	int		j;
@@ -423,7 +423,7 @@ void	draw_chunck(t_data *data, __unused char ***ptr, __unused void **arr)
 		while (++j < 20)
 		{
 			printf("%d ", i + y);
-			img = get_tile(data, (*ptr)[i + y][j + x], arr);
+			img = get_tile(data, data->ptr[i + y][j + x]);
 			if (!img)
 				mlx_put_image_to_window(data->mlx, data->win, \
 				data->img->unknown_tile, j * 50, i * 50);
@@ -458,23 +458,11 @@ void	print_on_screen(t_data *data)
 	// make to store then free ?
 	if (!data->design_mode)
 	{
-		char	***ptr;
-		void	**arr;
 		int		i = -1;
 
-		if (data->cave)
-		{
-			ptr = &data->map_cave;
-			arr = data->img->inside_tiles;
-		}
-		else
-		{
-			ptr = &data->map_copy;
-			arr = data->img->outside_tiles;
-		}
 		while(++i < 4)
 			mlx_put_image_to_window(data->mlx, data->win, \
-				get_tile(data, (*ptr)[0][i], arr), i * 50, 0);
+				get_tile(data, data->ptr[0][i]), i * 50, 0);
 	}
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
 	mlx_string_put(data->mlx, data->win, 160, \
@@ -486,23 +474,10 @@ void	print_on_screen(t_data *data)
 
 void	draw_map(t_data *data)
 {
-	char	***ptr;
-	void	**arr;
-
-	if (data->cave)
-	{
-		ptr = &data->map_cave;
-		arr = data->img->inside_tiles;
-	}
-	else
-	{
-		ptr = &data->map_copy;
-		arr = data->img->outside_tiles;
-	}
 	if (data->design_mode)
-		draw_chunck(data, ptr, arr);
+		draw_chunck(data);
 	else
-		draw_map_helper(data, ptr, arr);
+		draw_map_helper(data);
 	print_on_screen(data);
 }
 
@@ -553,53 +528,44 @@ void	move_player(int keycode, t_data *data, char **map)
 		data->player_move_count++;
 }
 
-void	do_tile_action(t_data *data, char ***ptr)
+void	do_tile_action(t_data *data)
 {
-	if ((*ptr)[data->player_possition[1]][data->player_possition[0]] == 'C')
+	if (data->ptr[data->player_possition[1]][data->player_possition[0]] == 'C')
 	{
-		(*ptr)[data->player_possition[1]][data->player_possition[0]] = 'H';
+		data->ptr[data->player_possition[1]][data->player_possition[0]] = 'H';
 		data->collectible_nbr--;
 	}
-	else if ((*ptr)[data->player_possition[1]][data->player_possition[0]] \
+	else if (data->ptr[data->player_possition[1]][data->player_possition[0]] \
 	== '-')
 	{
 		if (data->cave)
 		{
+		data->ptr = data->map_copy;
+		data->arr = data->img->outside_tiles;
 			data->cave = 0;
 			data->player_possition[1] = data->player_possition[1] - 1;
 		}
 		else
 		{
+		data->ptr = data->map_cave;
+		data->arr = data->img->inside_tiles;
 			data->cave = 1;
 			data->player_possition[1] = data->player_possition[1] + 1;
 		}
 		draw_map(data);
 	}
-	else if ((*ptr)[data->player_possition[1]][data->player_possition[0]] \
+	else if (data->ptr[data->player_possition[1]][data->player_possition[0]] \
 	== 'E' && data->collectible_nbr == 0)
 		printf("You win!\n");
 }
 
 int	key_press(int keycode, t_data *data)
 {
-	char	***ptr;
-	void	**arr;
-
-	if (data->cave)
-	{
-		ptr = &data->map_cave;
-		arr = data->img->inside_tiles;
-	}
-	else
-	{
-		ptr = &data->map_copy;
-		arr = data->img->outside_tiles;
-	}
 	mlx_put_image_to_window(data->mlx, data->win, \
-	get_tile(data, (*ptr)[data->player_possition[1]][data->player_possition[0]] \
-	, arr), data->player_possition[0] * 50, data->player_possition[1] * 50);
+	get_tile(data, data->ptr[data->player_possition[1]][data->player_possition[0]] \
+	), data->player_possition[0] * 50, data->player_possition[1] * 50);
 	move_player(keycode, data, data->map);
-	do_tile_action(data, ptr);
+	do_tile_action(data);
 	if (data->design_mode)
 		draw_map(data);
 	else
@@ -703,6 +669,16 @@ void	start_game(t_data *data)
 	setting_mlx(data);
 	load_image(data);
 	image_setup(data);
+	if (data->cave)
+	{
+		data->ptr = data->map_cave;
+		data->arr = data->img->inside_tiles;
+	}
+	else
+	{
+		data->ptr = data->map_copy;
+		data->arr = data->img->outside_tiles;
+	}
 	draw_map(data);
 	mlx_hook(data->win, 2, 0, &key_press, data);
 	mlx_loop_hook(data->mlx, update_frame, data);

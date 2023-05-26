@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 17:04:09 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/26 14:48:58 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -140,6 +140,8 @@ typedef struct s_data
 	char	**map_cave;
 	int		map_width;
 	int		map_height;
+	char	**ptr;
+	void	**arr;
 	/*img*/
 	t_img	*img;
 	int		time;
