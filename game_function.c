@@ -481,7 +481,6 @@ void	draw_chunck(t_data *data)
 		j = -1;
 		while (++j < 20)
 		{
-			printf("%d ", i + y);
 			img = get_tile(data, data->ptr[i + y][j + x]);
 			if (!img)
 				mlx_put_image_to_window(data->mlx, data->win, \
@@ -490,10 +489,7 @@ void	draw_chunck(t_data *data)
 				mlx_put_image_to_window(data->mlx, data->win, img, \
 				j * 50, i * 50);
 		}
-		printf("\n");
 	}
-		printf("\n");
-	printf("%d %d %d\n", x, y, data->map_width - 20);
 	if (x > 0 && x < data->map_width - 21)
 		x = 10;
 	else if (x > data->map_width - 22)
@@ -506,7 +502,6 @@ void	draw_chunck(t_data *data)
 		y = data->player_possition[1] - data->map_height+10;
 	else
 		y = data->player_possition[1];
-	printf("%d %d %d\n", x, y, data->player_possition[0]);
 	mlx_put_image_to_window(data->mlx, data->win, data->img->\
 	player[data->direction][(data->time / 10) % 4], \
 	x * 50, y * 50);
@@ -514,17 +509,17 @@ void	draw_chunck(t_data *data)
 
 void	print_on_screen(t_data *data)
 {
-	// make to store then free ?
+	char *move = ft_itoa(data->player_move_count);
+	char *nbr = ft_itoa(data->collectible_nbr);
+
 	if (!data->design_mode)
 	{
 		int		i = -1;
 
-		while(++i < 4)
+		while (++i < 4)
 			mlx_put_image_to_window(data->mlx, data->win, \
 				get_tile(data, data->ptr[0][i]), i * 50, 0);
 	}
-	char *move = ft_itoa(data->player_move_count);
-	char *nbr = ft_itoa(data->collectible_nbr);
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
 	mlx_string_put(data->mlx, data->win, 160, \
 	10, 136, move);
@@ -635,7 +630,7 @@ int	key_press(int keycode, t_data *data)
 		mlx_put_image_to_window(data->mlx, data->win, data->img->\
 		player[data->direction][(data->time / 10) % 4], \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
-	t_trap *current = data->trap_list;
+	t_trap	*current = data->trap_list;
 	while (current != NULL)
 	{
 		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
@@ -647,7 +642,7 @@ int	key_press(int keycode, t_data *data)
 				exit(0);
 			}
 			else
-				break;
+				break ;
 		}
 		current = current->next;
 	}
