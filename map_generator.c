@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define WIDTH 300
-#define HEIGHT 300
+#define WIDTH 2500
+#define HEIGHT 2500
 #define WALL '1'
 #define EMPTY '0'
 #define START 'P'
@@ -121,7 +121,7 @@ int main()
 {
     char map[HEIGHT][WIDTH];
     generate_map(map);
-    print_map(map);
+    // print_map(map);
     if (write_map_to_file(map, WIDTH, HEIGHT, "./data/map/map.txt") != 0)
     {
         fprintf(stderr, "Failed to write map to file\n");
