@@ -79,16 +79,6 @@ is not closed\n", line_nbr + 1, i + 1);
 	return (error);
 }
 
-/**
- * Check for common errors in the game map.
- *
- * This function checks if the map contains exactly one player, one exit,
- * and at least one collectible item. If any of these conditions are not met,
- * an error message is printed and the function returns 0. Otherwise, it returns 1.
- *
- * @param data A pointer to a t_data struct that contains the game data.
- * @return 1 if no errors are found, 0 otherwise.
- */
 int	check_common_errors(t_data *data)
 {
 	int	error;

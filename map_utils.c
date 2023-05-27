@@ -77,12 +77,15 @@ void	set_tile(char ***map, t_data *data)
 	set_corner_tile(map, data);
 }
 
-void	check_trap(t_data *data,int i,int j)
+void	check_trap(t_data *data, int i, int j)
 {
-	t_trap *tmp = data->trap_list->next;
-	t_trap *current = data->trap_list;
+	t_trap	*tmp;
+	t_trap	*current;
+
+	current = data->trap_list;
 	if (current != NULL)
 	{
+		tmp = current->next;
 		if (current->x == j && current->y == i)
 		{
 			free(data->trap_list);
@@ -91,16 +94,16 @@ void	check_trap(t_data *data,int i,int j)
 		tmp = current;
 		current = current->next;
 	}
-    while (current != NULL)
-    {
-        if (current->x == j && current->y == i)
+	while (current != NULL)
+	{
+		if (current->x == j && current->y == i)
 		{
 			tmp->next = current->next;
 			free(current);
 		}
 		tmp = current;
-        current = current->next;
-    }
+		current = current->next;
+	}
 }
 
 void	generate_cave(t_data *data, int i, int j)
@@ -129,65 +132,78 @@ void	generate_cave(t_data *data, int i, int j)
 
 void	generate_enemy(t_data *data, int i, int j)
 {
+	t_enemy	*current;
+	t_enemy	*new_enemy;
+
+	new_enemy = NULL;
+	current = NULL;
 	if (rand() % 100 < 1)
 	{
-		t_enemy* newEnemy = (t_enemy*)malloc(sizeof(t_enemy));
-		if (!newEnemy)
-			{
-				free_all(data);
-				exit(1);
-			}
-		newEnemy->x = j;
-		newEnemy->y = i;
-		newEnemy->frame = rand() %1001;
-		newEnemy->direction = rand() %4;
-		newEnemy->next = NULL;
+		new_enemy = (t_enemy *)malloc(sizeof(t_enemy));
+		if (!new_enemy)
+		{
+			free_all(data);
+			exit(1);
+		}
+		new_enemy->x = j;
+		new_enemy->y = i;
+		new_enemy->frame = rand() % 1001;
+		new_enemy->direction = rand() % 4;
+		new_enemy->next = NULL;
 		if (data->enemy_list == NULL)
 		{
-			data->enemy_list = newEnemy;
+			data->enemy_list = new_enemy;
 		}
 		else
 		{
-			t_enemy* current = data->enemy_list;
+			current = data->enemy_list;
 			while (current->next != NULL)
 			{
 				current = current->next;
 			}
-			current->next = newEnemy;
+			current->next = new_enemy;
 		}
 	}
 }
 
 void	generate_trap(t_data *data, int i, int j)
 {
-	if (data->map[i][j] != '1' && data->map[i][j] != '#' && data->map[i][j] != 'C' && data->map[i][j] != 'E' && data->map_copy[i][j] != 'C' && data->map_cave[i][j] != 'C' && data->player_possition[0] != j)
+	t_trap	*current;
+	t_trap	*new_trap;
+
+	new_trap = NULL;
+	current = NULL;
+	if (data->map[i][j] != '1' && data->map[i][j] != '#' &&
+		data->map[i][j] != 'C' && data->map[i][j] != 'E' &&
+		data->map_copy[i][j] != 'C' && data->map_cave[i][j] != 'C' &&
+		data->player_possition[0] != j)
 	{
-		if (data->map_copy[i-1][j] == '-' || data->map_copy[i+1][j] == '-')
+		if (data->map_copy[i - 1][j] == '-' || data->map_copy[i + 1][j] == '-')
 			return ;
 		if (rand() % 100 < 5)
 		{
-			t_trap* newTrap = (t_trap*)malloc(sizeof(t_trap));
-			if (!newTrap)
-				{
-					free_all(data);
-					exit(1);
-				}
-			newTrap->x = j;
-			newTrap->y = i;
-			newTrap->frame = rand() %1001;
-			newTrap->next = NULL;
+			new_trap = (t_trap *)malloc(sizeof(t_trap));
+			if (!new_trap)
+			{
+				free_all(data);
+				exit(1);
+			}
+			new_trap->x = j;
+			new_trap->y = i;
+			new_trap->frame = rand() % 1001;
+			new_trap->next = NULL;
 			if (data->trap_list == NULL)
 			{
-				data->trap_list = newTrap;
+				data->trap_list = new_trap;
 			}
 			else
 			{
-				t_trap* current = data->trap_list;
+				current = data->trap_list;
 				while (current->next != NULL)
 				{
 					current = current->next;
 				}
-				current->next = newTrap;
+				current->next = new_trap;
 			}
 		}
 		else

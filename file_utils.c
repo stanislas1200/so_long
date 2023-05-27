@@ -45,7 +45,7 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 1; // -2 on windows
+			i -= 2;
 		else
 			all_line = read_file_helper2(all_line, line, fd);
 		if (i != data->map_width)
@@ -61,13 +61,6 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 	return (all_line);
 }
 
-/**
- * Reads the contents of a file given by its file descriptor.
- *
- * @param fd The file descriptor of the file to read.
- *
- * @return Returns a pointer to the contents of the file as a string, or NULL on error.
- */
 char	*read_file(int fd, t_data *data)
 {
 	char	*line;
@@ -88,14 +81,6 @@ char	*read_file(int fd, t_data *data)
 	return (all_line);
 }
 
-/**
- * Reads a file at the specified path and sets the map to the contents of the file.
- *
- * @param path The path of the file to read.
- * @param map A pointer to the map, which will be set to the contents of the file.
- * @param data A pointer to a t_data struct that contains data about the map.
- *
- */
 void	set_map_from_file(char *path, t_data *data)
 {
 	int		fd;

@@ -43,17 +43,6 @@ int	split_helper(char ***tab, char **all_line, int *i)
 	return (1);
 }
 
-/**
- * Splits a string into an array of strings, with each string corresponding to a line
- * terminated by a newline character ('\n').
- *
- * @param all_line The string to split.
- * @param len The maximum length of each line (excluding the null terminator).
- *
- * @return An array of strings, with each string corresponding to a line in the original string.
- *         The last element of the array is NULL.
- *         Returns NULL on error.
- */
 char	**split_lines(char *all_line, int len, char **tab, int j)
 {
 	int	i;

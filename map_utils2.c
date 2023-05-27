@@ -12,16 +12,6 @@
 
 #include "so_long.h"
 
-/**
- * Check for common errors in the game map.
- *
- * This function checks if the map contains exactly one player, one exit,
- * and at least one collectible item. If any of these conditions are not met,
- * an error message is printed and the function returns 0. Otherwise, it returns 1.
- *
- * @param data A pointer to a t_data struct that contains the game data.
- * @return 1 if no errors are found, 0 otherwise.
- */
 int	check_map_tiles(t_data *data, int i, int j)
 {
 	data->player_possition = malloc(sizeof(int) * 2);

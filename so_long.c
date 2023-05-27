@@ -12,8 +12,24 @@
 
 #include "so_long.h"
 
+void	free_more2(t_data *data)
+{
+	t_enemy	*tmp;
+
+	while (data->enemy_list)
+	{
+		tmp = data->enemy_list;
+		data->enemy_list = data->enemy_list->next;
+		free(tmp);
+	}
+	if (data)
+		free(data);
+}
+
 void	free_more(t_data *data)
 {
+	t_trap	*tmp;
+
 	if (data->map)
 	{
 		free(data->map);
@@ -26,22 +42,11 @@ void	free_more(t_data *data)
 		free(data->img);
 	while (data->trap_list)
 	{
-		t_trap	*tmp;
-
 		tmp = data->trap_list;
 		data->trap_list = data->trap_list->next;
 		free(tmp);
 	}
-	while (data->enemy_list)
-	{
-		t_enemy	*tmp;
-
-		tmp = data->enemy_list;
-		data->enemy_list = data->enemy_list->next;
-		free(tmp);
-	}
-	if (data)
-		free(data);
+	free_more2(data);
 }
 
 void	free_all(t_data *data)
@@ -108,19 +113,13 @@ int	main(int ac, char **av)
 		if (check_map_tiles(data, -1, -1))
 		{
 			if (data->reachable_end)
-			{
 				start_game(data);
-			}
 			else
-			{
 				printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
-			}
 		}
 	}
 	else
 		printf("\x1b[33mWarning\x1b[0m: No Map\n");
-	// mlx_destroy_window(mlx, mlx_win);
-	// free(mlx);
 	free_all(data);
 	return (0);
 }
