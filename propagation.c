@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/29 17:35:41 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/10 15:20:39 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 12:38:57 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,11 +107,8 @@ void	pg2(char	**map, int	*start, int	*end, t_data	*data)
 
 int	check_access(t_data *data, int *start, int *end)
 {
-	int	cave;
-
-	cave = 0;
 	pg2(data->map, start, end, data);
-	if (cave)
+	if (data->cave)
 		return (1);
 	return (0);
 }

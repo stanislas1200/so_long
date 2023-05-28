@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:27:06 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 13:27:07 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 12:32:53 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 		free(line);
 		line = get_next_line(fd);
 		if (!line)
-			i -= 2;
+			i -= 1;
 		else
 			all_line = read_file_helper2(all_line, line, fd);
 		if (i != data->map_width)

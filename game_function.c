@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/26 17:45:15 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 12:42:38 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -728,7 +728,6 @@ void	start_game(t_data *data)
 	setting_mlx(data);
 	load_image(data);
 	image_setup(data);
-	printf("\x1b[32mSUCCESS\n\x1b[0m");
 	if (data->cave)
 	{
 		data->ptr = data->map_cave;
