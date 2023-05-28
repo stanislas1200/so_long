@@ -6,11 +6,18 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 16:21:44 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 17:00:24 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	end(void)
+{
+	printf("You lose!\n");
+	system("leaks so_long");
+	exit(0);
+}
 
 int	get_len(int nbr)
 {
@@ -136,161 +143,218 @@ void	move_enemy(t_data *data, t_enemy *enemy)
 	enemy->y = pos[1];
 }
 
-void	update_portal(t_data *data)
+void	update_portal_helper(t_data *data)
 {
-	if (data->cave && data->map_cave[data->exit_possition[1]][data->exit_possition[0]] != '5' && !data->design_mode)
+	if (!data->cave && \
+	data->map_copy[data->exit_possition[1]][data->exit_possition[0]] != '5' \
+	&& !data->design_mode)
 	{
-		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[data->exit_possition[1]][data->exit_possition[0]]), \
+		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, \
+		data->ptr[data->exit_possition[1]][data->exit_possition[0]]), \
 		data->exit_possition[0] * 50, data->exit_possition[1] * 50);
 		if (data->collectible_nbr == 0)
-			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+			mlx_put_image_to_window(data->mlx, data->win, \
+			data->img->exit_on[(data->time / 10) % 4], \
 			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
 		else
 			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile, \
 			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
 	}
-	else if (!data->cave && data->map_copy[data->exit_possition[1]][data->exit_possition[0]] != '5' && !data->design_mode)
+}
+
+void	update_portal(t_data *data)
+{
+	if (data->cave && \
+	data->map_cave[data->exit_possition[1]][data->exit_possition[0]] != '5' \
+	&& !data->design_mode)
 	{
-		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[data->exit_possition[1]][data->exit_possition[0]]), \
+		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, \
+		data->ptr[data->exit_possition[1]][data->exit_possition[0]]), \
 		data->exit_possition[0] * 50, data->exit_possition[1] * 50);
 		if (data->collectible_nbr == 0)
-			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_on[(data->time / 10) % 4], \
+			mlx_put_image_to_window(data->mlx, data->win, \
+			data->img->exit_on[(data->time / 10) % 4], \
 			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
 		else
 			mlx_put_image_to_window(data->mlx, data->win, data->img->exit_tile, \
 			data->exit_possition[0] * 50, data->exit_possition[1] * 50);
+	}
+	else
+		update_portal_helper(data);
+}
+
+void	update_trap_frame_chelper(t_data *data, t_trap *current)
+{
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y][current->x]), \
+	data->j * 50, data->i * 50);
+	mlx_put_image_to_window(data->mlx, data->win, \
+	data->img->trap[(current->frame / 10) % 9], \
+	data->j * 50, data->i * 50);
+}
+
+void	update_trap_frame_chunck(t_data *data, t_trap *current)
+{
+	int	y;
+	int	x;
+
+	x = data->player_possition[0] - 10;
+	y = data->player_possition[1] - 5;
+	if (-1 + y < 0)
+		y = 0;
+	if (-1 + x < 0)
+		x = 0;
+	if (10 + y > data->map_height)
+		y = data->map_height - 10;
+	if (20 + x > data->map_width)
+		x = data->map_width - 20;
+	data->i = -1;
+	while (++data->i < 10)
+	{
+		data->j = -1;
+		while (++data->j < 20)
+		{
+			if (current->x == data->j + x && current->y == data->i + y)
+				update_trap_frame_chelper(data, current);
+		}
+	}
+}
+
+void	update_trap_frame(t_data *data, t_trap *current)
+{
+	if (data->cave && data->map_cave[current->y][current->x] != '5')
+	{
+		mlx_put_image_to_window(data->mlx, data->win, \
+		get_tile(data, data->ptr[current->y][current->x]), \
+		current->x * 50, current->y * 50);
+		mlx_put_image_to_window(data->mlx, data->win, \
+		data->img->trap[(current->frame / 10) % 9], \
+		current->x * 50, current->y * 50);
+	}
+	else if (!data->cave && data->map_copy[current->y][current->x] != '5')
+	{
+		mlx_put_image_to_window(data->mlx, data->win, \
+		get_tile(data, data->ptr[current->y][current->x]), \
+		current->x * 50, current->y * 50);
+		mlx_put_image_to_window(data->mlx, data->win, \
+		data->img->trap[(current->frame / 10) % 9], \
+		current->x * 50, current->y * 50);
 	}
 }
 
 void	update_trap(t_data *data)
 {
-	t_trap *current = data->trap_list;
+	t_trap	*current;
+
+	current = data->trap_list;
 	while (current != NULL)
 	{
 		current->frame = (current->frame + 1) % 1001;
-		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
-		{
+		if (current->x == data->player_possition[0] \
+		&& current->y == data->player_possition[1])
 			if ((current->frame / 10) % 9 == 7)
-			{	
-				printf("You lose!\n");
-				mlx_clear_window(data->mlx, data->win);
-				mlx_destroy_window(data->mlx, data->win);
-				// if (data->mlx)
-				// 	free(data->mlx);
-				// free_all(data);
-				// system("leaks so_long");
-				exit(0);
-			}
-		}
+				end();
 		if (data->design_mode)
-		{
-			int y = data->player_possition[1] - 5;
-			int x = data->player_possition[0] - 10;
-			if (-1 + y < 0)
-				y = 0;
-			if (-1 + x < 0 )
-				x = 0;
-			if (10 + y > data->map_height)
-				y = data->map_height - 10;
-			if (20 + x > data->map_width)
-				x = data->map_width - 20;
-			int i = -1;
-			while (++i < 10)
-			{
-				int j = -1;
-				while (++j < 20)
-				{
-					if (current->x == j + x && current->y == i + y)
-					{
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), \
-						j * 50, i * 50);
-						mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
-						j * 50, i * 50);
-					}
-				}
-			}
-		}
-		else if (data->cave && data->map_cave[current->y][current->x] != '5')
-		{
-			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), \
-			current->x * 50, current->y * 50);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
-			current->x * 50, current->y * 50);
-		}
-		else if (!data->cave && data->map_copy[current->y][current->x] != '5')
-		{
-			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), \
-			current->x * 50, current->y * 50);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->trap[(current->frame / 10) % 9], \
-			current->x * 50, current->y * 50);
-		}
+			update_trap_frame_chunck(data, current);
+		else
+			update_trap_frame(data, current);
 		current = current->next;
+	}
+}
+
+void	update_enemy_frame_chelper(t_data *data, t_enemy *current)
+{
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y - 1][current->x]), \
+	data->j * 50, (data->i - 1) * 50);
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y + 1][current->x]), \
+	data->j * 50, (data->i + 1) * 50);
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y][current->x]), \
+	data->j * 50, data->i * 50);
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y][current->x + 1]), \
+	(data->j + 1) * 50, data->i * 50);
+	mlx_put_image_to_window(data->mlx, data->win, \
+	get_tile(data, data->ptr[current->y][current->x - 1]), \
+	(data->j - 1) * 50, data->i * 50);
+	if ((current->frame) % 80 == 0)
+		move_enemy(data, current);
+	mlx_put_image_to_window(data->mlx, data->win, data->\
+	img->enemy[current->direction][(current->frame / \
+	10) % 4], \
+	data->j * 50, data->i * 50);
+}
+
+void	update_enemy_frame_chunck(t_data *data, t_enemy *current)
+{
+	int	x;
+	int	y;
+
+	y = data->player_possition[1] - 5;
+	x = data->player_possition[0] - 10;
+	if (-1 + y < 0)
+		y = 0;
+	if (-1 + x < 0)
+		x = 0;
+	if (10 + y > data->map_height)
+		y = data->map_height - 10;
+	if (20 + x > data->map_width)
+		x = data->map_width - 20;
+	data->i = -1;
+	while (++data->i < 10)
+	{
+		data->j = -1;
+		while (++data->j < 20)
+		{
+			if (current->x == data->j + x && current->y == data->i + y)
+				update_enemy_frame_chelper(data, current);
+		}
+	}
+}
+
+void	update_enemy_frame(t_data *data, t_enemy *current)
+{
+	if (data->cave && data->map_cave[current->y][current->x] != '5')
+	{
+		mlx_put_image_to_window(data->mlx, data->win, \
+		get_tile(data, data->ptr[current->y][current->x]), \
+		current->x * 50, current->y * 50);
+		if ((current->frame) % 10 == 0)
+			move_enemy(data, current);
+		mlx_put_image_to_window(data->mlx, data->win, \
+		data->img->enemy[current->direction][(current->frame / 10) % 4], \
+		current->x * 50, current->y * 50);
+	}
+	else if (!data->cave && data->map_copy[current->y][current->x] != '5')
+	{
+		mlx_put_image_to_window(data->mlx, data->win, \
+		get_tile(data, data->ptr[current->y][current->x]), \
+		current->x * 50, current->y * 50);
+		if ((current->frame) % 50 == 0)
+			move_enemy(data, current);
+		mlx_put_image_to_window(data->mlx, data->win, \
+		data->img->enemy[current->direction][(current->frame / 10) % 4], \
+		current->x * 50, current->y * 50);
 	}
 }
 
 void	update_enemy(t_data *data)
 {
-	t_enemy *current = data->enemy_list;
+	t_enemy	*current;
+
+	current = data->enemy_list;
 	while (current != NULL)
 	{
 		current->frame = (current->frame + 1) % 1001;
-		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
-		{
-			printf("You lose!\n");
-				// system("leaks so_long");
-			exit(0);
-		}
+		if (current->x == data->player_possition[0] \
+		&& current->y == data->player_possition[1])
+			end();
 		if (data->design_mode)
-		{
-			int y = data->player_possition[1] - 5;
-			int x = data->player_possition[0] - 10;
-			if (-1 + y < 0)
-				y = 0;
-			if (-1 + x < 0 )
-				x = 0;
-			if (10 + y > data->map_height)
-				y = data->map_height - 10;
-			if (20 + x > data->map_width)
-				x = data->map_width - 20;
-			int i = -1;
-			while (++i < 10)
-			{
-				int j = -1;
-				while (++j < 20)
-				{
-					if (current->x == j + x && current->y == i + y)
-					{//temp
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y - 1][current->x]), j * 50, (i-1) * 50);
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y + 1][current->x]), j * 50, (i+1) * 50);
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), j * 50, i * 50);
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x + 1]), (j+1) * 50, i * 50);
-						mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x - 1]), (j-1) * 50, i * 50);
-						if ((current->frame) % 80 == 0)
-							move_enemy(data, current);
-						mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current->direction][(current->frame / 10) % 4], \
-						j * 50, i * 50);
-					}
-				}
-			}
-		}
-		else if (data->cave && data->map_cave[current->y][current->x] != '5')
-		{
-			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), \
-			current->x * 50, current->y * 50);
-			if ((current->frame) % 10 == 0)
-				move_enemy(data, current);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current->direction][(current->frame / 10) % 4], \
-			current->x * 50, current->y * 50);
-		}
-		else if (!data->cave && data->map_copy[current->y][current->x] != '5')
-		{
-			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[current->y][current->x]), \
-			current->x * 50, current->y * 50);
-			if ((current->frame) % 50 == 0)
-				move_enemy(data, current);
-			mlx_put_image_to_window(data->mlx, data->win, data->img->enemy[current->direction][(current->frame / 10) % 4], \
-			current->x * 50, current->y * 50);
-		}
+			update_enemy_frame_chunck(data, current);
+		else
+			update_enemy_frame(data, current);
 		current = current->next;
 	}
 }
@@ -299,7 +363,9 @@ void	update_player_frame(t_data *data)
 {
 	if (data->design_mode)
 	{
-		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 \
+		&& data->player_possition[0] < data->map_width - 10 \
+		&& data->player_possition[1] < data->map_height - 5)
 			mlx_put_image_to_window(data->mlx, data->win, data->img->\
 			player[data->direction][(data->time / 10) % 4], \
 			10 * 50, 5 * 50);
@@ -316,12 +382,17 @@ int	update_frame(t_data *data)
 		data->time = 0;
 	if (data->design_mode)
 	{
-		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 && data->player_possition[0] < data->map_width - 10 && data->player_possition[1] < data->map_height - 5)
-			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[data->exit_possition[1]][data->exit_possition[0]]), 10 * 50, 5 * 50);
+		if (data->player_possition[0] >= 10 && data->player_possition[1] >= 5 \
+		&& data->player_possition[0] < data->map_width - 10 \
+		&& data->player_possition[1] < data->map_height - 5)
+			mlx_put_image_to_window(data->mlx, data->win, get_tile(data, \
+			data->ptr[data->exit_possition[1]][data->exit_possition[0]]), \
+			10 * 50, 5 * 50);
 	}
 	else
 	{
-		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, data->ptr[data->player_possition[1]][data->player_possition[0]]), \
+		mlx_put_image_to_window(data->mlx, data->win, get_tile(data, \
+		data->ptr[data->player_possition[1]][data->player_possition[0]]), \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	}
 	update_portal(data);
@@ -654,13 +725,6 @@ void	do_tile_action(t_data *data)
 		draw_map(data);
 	}
 	exit_tile_check(data);
-}
-
-void	end(void)
-{
-	printf("You lose!\n");
-	system("leaks so_long");
-	exit(0);
 }
 
 void	check_trap_collision(t_data *data)
