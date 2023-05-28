@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 12:42:38 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 15:27:43 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,7 +187,7 @@ int	update_frame(t_data *data)
 				// if (data->mlx)
 				// 	free(data->mlx);
 				// free_all(data);
-				system("leaks so_long");
+				// system("leaks so_long");
 				exit(0);
 			}
 		}
@@ -242,7 +242,7 @@ int	update_frame(t_data *data)
 		if (current2->x == data->player_possition[0] && current2->y == data->player_possition[1])
 		{
 			printf("You lose!\n");
-				system("leaks so_long");
+				// system("leaks so_long");
 			exit(0);
 		}
 		if (data->design_mode)
@@ -509,13 +509,15 @@ void	draw_chunck(t_data *data)
 
 void	print_on_screen(t_data *data)
 {
-	char *move = ft_itoa(data->player_move_count);
-	char *nbr = ft_itoa(data->collectible_nbr);
+	int		i;
+	char	*move;
+	char	*nbr;
 
+	move = ft_itoa(data->player_move_count);
+	nbr = ft_itoa(data->collectible_nbr);
 	if (!data->design_mode)
 	{
-		int		i = -1;
-
+		i = -1;
 		while (++i < 4)
 			mlx_put_image_to_window(data->mlx, data->win, \
 				get_tile(data, data->ptr[0][i]), i * 50, 0);
@@ -586,6 +588,13 @@ void	move_player(int keycode, t_data *data, char **map)
 		data->player_move_count++;
 }
 
+void	exit_tile_check(t_data *data)
+{
+	if (data->ptr[data->player_possition[1]][data->player_possition[0]] \
+	== 'E' && data->collectible_nbr == 0)
+		printf("You win!\n");
+}
+
 void	do_tile_action(t_data *data)
 {
 	if (data->ptr[data->player_possition[1]][data->player_possition[0]] == 'C')
@@ -612,16 +621,41 @@ void	do_tile_action(t_data *data)
 		}
 		draw_map(data);
 	}
-	else if (data->ptr[data->player_possition[1]][data->player_possition[0]] \
-	== 'E' && data->collectible_nbr == 0)
-		printf("You win!\n");
+	exit_tile_check(data);
+}
+
+void	end(void)
+{
+	printf("You lose!\n");
+	system("leaks so_long");
+	exit(0);
+}
+
+void	check_trap_collision(t_data *data)
+{
+	t_trap	*current;
+
+	current = data->trap_list;
+	while (current != NULL)
+	{
+		if (current->x == data->player_possition[0]
+			&& current->y == data->player_possition[1])
+		{
+			if ((current->frame / 10) % 9 == 7)
+				end();
+			else
+				break ;
+		}
+		current = current->next;
+	}
 }
 
 int	key_press(int keycode, t_data *data)
 {
 	mlx_put_image_to_window(data->mlx, data->win, \
-	get_tile(data, data->ptr[data->player_possition[1]][data->player_possition[0]] \
-	), data->player_possition[0] * 50, data->player_possition[1] * 50);
+	get_tile(data,
+			data->ptr[data->player_possition[1]][data->player_possition[0]]),
+		data->player_possition[0] * 50, data->player_possition[1] * 50);
 	move_player(keycode, data, data->map);
 	do_tile_action(data);
 	if (data->design_mode)
@@ -630,22 +664,7 @@ int	key_press(int keycode, t_data *data)
 		mlx_put_image_to_window(data->mlx, data->win, data->img->\
 		player[data->direction][(data->time / 10) % 4], \
 		data->player_possition[0] * 50, data->player_possition[1] * 50);
-	t_trap	*current = data->trap_list;
-	while (current != NULL)
-	{
-		if (current->x == data->player_possition[0] && current->y == data->player_possition[1])
-		{
-			if ((current->frame / 10) % 9 == 7)
-			{	
-				printf("You lose!\n");
-				system("leaks so_long");
-				exit(0);
-			}
-			else
-				break ;
-		}
-		current = current->next;
-	}
+	check_trap_collision(data);
 	print_on_screen(data);
 	return (0);
 }

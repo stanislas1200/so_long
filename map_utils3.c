@@ -6,19 +6,11 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:26:26 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/25 13:26:27 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 14:16:47 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-void	*free_new_map(char **new_map, int i)
-{
-	while (--i >= 0)
-		free(new_map[i]);
-	free(new_map);
-	return (NULL);
-}
 
 char	**new_mapcpy(char **map, int height, int width)
 {

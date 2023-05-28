@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/26 13:33:54 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/28 14:13:51 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	free_more(t_data *data)
 	free_more2(data);
 }
 
-void	free_all(t_data *data)
+void	free_all(__unused t_data *data)
 {
 	int	i;
 
@@ -80,7 +80,6 @@ void	data_setup(t_data *data)
 	data->img = NULL;
 	data->trap_list = NULL;
 	data->enemy_list = NULL;
-	data->printed = 0;
 	data->cave = 0;
 	data->player_nbr = 0;
 	data->exit_nbr = 0;
@@ -123,5 +122,3 @@ int	main(int ac, char **av)
 	free_all(data);
 	return (0);
 }
-
-// 1 more function
