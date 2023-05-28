@@ -31,9 +31,7 @@ void	push(t_node	**top, int x, int y)
 
 	node = (t_node *)malloc(sizeof(t_node));
 	if (node == NULL)
-	{
 		return ;
-	}
 	node->x = x;
 	node->y = y;
 	node->next = *top;
@@ -45,9 +43,7 @@ void	pop(t_node	**top)
 	t_node	*temp;
 
 	if (*top == NULL)
-	{
 		return ;
-	}
 	temp = *top;
 	*top = (*top)->next;
 	free(temp);

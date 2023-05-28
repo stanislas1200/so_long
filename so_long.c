@@ -49,7 +49,7 @@ void	free_more(t_data *data)
 	free_more2(data);
 }
 
-void	free_all(__unused t_data *data)
+void	free_all(t_data *data)
 {
 	int	i;
 
