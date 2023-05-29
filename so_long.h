@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 14:22:12 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 12:43:45 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,5 +170,18 @@ void	cleanup_stack(t_data *data);
 void	*free_new_map(char **new_map, int i);
 void	generate_trap(t_data *data, int i, int j);
 void	check_trap(t_data *data, int i, int j);
+void	move_player(int keycode, t_data *data, char **map);
+void	do_tile_action(t_data *data);
+void	draw_map(t_data *data);
+void	check_trap_collision(t_data *data);
+void	print_on_screen(t_data *data);
+void	load_image(t_data *data);
+int		update_frame(t_data *data);
+void	end(void);
+void	*get_tile(t_data *data, char tile);
+void	update_trap(t_data *data);
+void	update_enemy(t_data *data);
+int		update_frame(t_data *data);
+
 
 #endif
