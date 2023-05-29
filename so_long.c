@@ -106,6 +106,7 @@ void	data_setup(t_data *data)
 	data->time = 0;
 	data->design_mode = 0;
 	data->img_loaded = 0;
+	data->player_max_hp = 10;
 }
 
 int	main(int ac, char **av)

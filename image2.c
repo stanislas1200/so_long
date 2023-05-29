@@ -67,6 +67,10 @@ void	load_image6(t_data *data)
 {
 	data->img->trap[7] = i("./data/texture/trap4.xpm", data);
 	data->img->trap[8] = i("./data/texture/trap5.xpm", data);
+	data->img->gui[0] = i("./data/texture/other/gui0.xpm", data);
+	data->img->gui[1] = i("./data/texture/other/gui1.xpm", data);
+	data->img->bar[0] = i("./data/texture/other/hp.xpm", data);
+	data->img->bar[1] = i("./data/texture/other/rg.xpm", data);
 	data->img_loaded = 1;
 }
 

@@ -34,6 +34,8 @@ typedef struct s_img
 	void	**enemy[4][4];
 	void	*unknown_tile;
 	void	*exit_tile;
+	void	gui[2];
+	void	bar[2];
 }	t_img;
 
 typedef struct s_trap
@@ -65,6 +67,8 @@ typedef struct s_data
 	void	*mlx;
 	void	*win;
 	int		*player_possition;
+	int		player_hp;
+	int		player_max_hp;
 	int		collected_count;
 	int		player_move_count;
 	int		player_frame;

@@ -106,7 +106,11 @@ void	check_trap_collision(t_data *data)
 			&& current->y == data->player_possition[1])
 		{
 			if ((current->frame / 10) % 9 == 7)
-				end(data, 0);
+			{
+				data->player_hp--;
+				if (data->player_hp <= 0)
+					end(data, 0);
+			}
 			else
 				break ;
 		}

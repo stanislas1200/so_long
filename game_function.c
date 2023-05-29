@@ -114,6 +114,7 @@ int	key_press(int keycode, t_data *data)
 
 void	start_game(t_data *data)
 {
+	data->player_hp = data->player_max_hp;
 	map_setup(data);
 	if (data->map_copy[data->player_possition[1]][data->player_possition[0]] \
 	== 'P')

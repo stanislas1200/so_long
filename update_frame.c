@@ -12,6 +12,26 @@
 
 #include "so_long.h"
 
+void	update_gui(t_data *data)
+{
+	int	i;
+
+	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[0], 0, \
+	(data->map_width - 2) * 50);
+	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[1], 0, \
+	(data->map_width - 1) * 50);
+	i = -1;
+	while (++i < data->hp)
+		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[0], 0, \
+		(data->map_width - 1) * 50 + i * 4);
+	i = -1;
+	while (++i < (data->time / 100) % 8)
+		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[1], 0, \
+		(data->map_width - 1) * 50 + i * 4);
+	if (data->hp < data->player_max_hp && data->time 899)
+		data->player_hp++;
+}
+
 void	update_portal_helper(t_data *data)
 {
 	if (!data->cave && \
@@ -92,6 +112,7 @@ int	update_frame(t_data *data)
 	update_trap(data);
 	update_enemy(data);
 	update_player_frame(data);
+	update_gui(data);
 	data->time++;
 	return (0);
 }

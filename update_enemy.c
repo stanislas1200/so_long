@@ -122,7 +122,11 @@ void	update_enemy(t_data *data)
 		current->frame = (current->frame + 1) % 1001;
 		if (current->x == data->player_possition[0] \
 		&& current->y == data->player_possition[1])
-			end(data, 2);
+		{
+			data->player_hp--;
+			if (data->player_hp <= 0)
+				end(data, 2);
+		}
 		if (data->design_mode)
 			update_enemy_frame_chunck(data, current);
 		else
