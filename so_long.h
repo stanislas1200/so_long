@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:43:45 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 12:48:44 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,6 +182,7 @@ void	*get_tile(t_data *data, char tile);
 void	update_trap(t_data *data);
 void	update_enemy(t_data *data);
 int		update_frame(t_data *data);
-
+void	*i(char *str, t_data *data);
+void	load_image5(t_data *data);
 
 #endif

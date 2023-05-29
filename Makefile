@@ -6,7 +6,7 @@
 #    By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/04/07 15:01:24 by sgodin            #+#    #+#              #
-#    Updated: 2023/05/29 12:44:09 by sgodin           ###   ########.fr        #
+#    Updated: 2023/05/29 12:48:50 by sgodin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ print.c \
 image.c \
 update_frame.c \
 update_trap.c \
-update_enemy.c
+update_enemy.c \
+image2.c
 
 NAME = so_long
 SANITIZE = -g3 -fsanitize=address
