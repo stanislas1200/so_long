@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:11 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:46:13 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 12:59:21 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void	update_trap(t_data *data)
 		if (current->x == data->player_possition[0] \
 		&& current->y == data->player_possition[1])
 			if ((current->frame / 10) % 9 == 7)
-				end();
+				end(data, 0);
 		if (data->design_mode)
 			update_trap_frame_chunck(data, current);
 		else

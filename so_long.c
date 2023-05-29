@@ -6,11 +6,16 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 14:13:51 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:42:14 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
+
+void	destroy_image(t_data *data)
+{
+	mlx_destroy_image(data->mlx, data->img->trap[0]);
+}
 
 void	free_more2(t_data *data)
 {
@@ -22,6 +27,10 @@ void	free_more2(t_data *data)
 		data->enemy_list = data->enemy_list->next;
 		free(tmp);
 	}
+	if (data->win)
+		mlx_destroy_window(data->mlx, data->win);
+	if (data->mlx)
+		free(data->mlx);
 	if (data)
 		free(data);
 }
@@ -38,6 +47,7 @@ void	free_more(t_data *data)
 		if (data->map_cave)
 			free(data->map_cave);
 	}
+	destroy_image(data);
 	if (data->img)
 		free(data->img);
 	while (data->trap_list)
@@ -114,11 +124,11 @@ int	main(int ac, char **av)
 			if (data->reachable_end)
 				start_game(data);
 			else
-				printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
+				ft_printf("\x1b[1;31mError\x1b[0m: No acces to exit\n");
 		}
 	}
 	else
-		printf("\x1b[33mWarning\x1b[0m: No Map\n");
+		ft_printf("\x1b[33mWarning\x1b[0m: No Map\n");
 	free_all(data);
 	return (0);
 }

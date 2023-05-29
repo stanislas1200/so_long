@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:26:26 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 14:16:47 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:07:16 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,16 +51,16 @@ int	check_line_char(char *line, int line_nbr, int last_line)
 	{
 		if (line[i] != '1' && line[i] != '0' && line[i] != 'C' \
 		&& line[i] != 'E' && line[i] != 'P')
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
+			ft_printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
 contains invalid characters\n", line_nbr + 1, i + 1);
 		if (line_nbr == 0 && line[i] != '1')
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
+			ft_printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
 is not closed\n", line_nbr + 1, i + 1);
 		if ((i == 0 || i == len - 1) && line[i] != '1')
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
+			ft_printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
 is not closed\n", line_nbr + 1, i + 1);
 		if (last_line && line[i] != '1')
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
+			ft_printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d:%d\x1b[0m \
 is not closed\n", line_nbr + 1, i + 1);
 		if ((line[i] != '1' && line[i] != '0' && line[i] != 'C' && line[i] \
 		!= 'E' && line[i] != 'P') || (line_nbr == 0 && line[i] != '1') || \
@@ -77,15 +77,15 @@ int	check_common_errors(t_data *data)
 
 	error = 1;
 	if (data->player_nbr > 1)
-		printf("\x1b[1;31mError\x1b[0m: Too many player on the map\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: Too many player on the map\n");
 	if (data->exit_nbr > 1)
-		printf("\x1b[1;31mError\x1b[0m: Too many exit on the map\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: Too many exit on the map\n");
 	if (data->player_nbr < 1)
-		printf("\x1b[1;31mError\x1b[0m: No player on the map\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: No player on the map\n");
 	if (data->exit_nbr < 1)
-		printf("\x1b[1;31mError\x1b[0m: No exit on the map\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: No exit on the map\n");
 	if (data->collectible_nbr == 0)
-		printf("\x1b[1;31mError\x1b[0m: No collectible on the map\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: No collectible on the map\n");
 	if (data->player_nbr > 1 || data->exit_nbr > 1 || data->player_nbr < 1 \
 	|| data->exit_nbr < 1 || data->collectible_nbr == 0)
 		error = 0;
@@ -105,7 +105,7 @@ void	check_collectible_access(t_data *data)
 		{
 			if (data->map[i][j] == 'C')
 			{
-				printf("\x1b[1;31mError\x1b[0m: No acces to \x1b[33m\
+				ft_printf("\x1b[1;31mError\x1b[0m: No acces to \x1b[33m\
 Collectible\x1b[0m line \x1b[1;35m%d:%d\x1b[0m\n", \
 				i + 1, j + 1);
 				data->reachable_end = 0;

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:27:06 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 12:32:53 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:07:16 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*read_file_helper(t_data *data, char *all_line, char *line, int fd)
 			all_line = read_file_helper2(all_line, line, fd);
 		if (i != data->map_width)
 		{
-			printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d and \
+			ft_printf("\x1b[1;31mError\x1b[0m: Map line\x1b[1;35m %d and \
 %d\x1b[0m doesn't have the same lenght\n", data->map_height, \
 			data->map_height + 1);
 			free(all_line);
@@ -71,7 +71,7 @@ char	*read_file(int fd, t_data *data)
 	line = get_next_line(fd);
 	if (!line)
 	{
-		printf("\x1b[1;31mError\x1b[0m: Map is empty\n");
+		ft_printf("\x1b[1;31mError\x1b[0m: Map is empty\n");
 		return (NULL);
 	}
 	all_line = ft_strjoin("", line);

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:47:24 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:47:25 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 12:59:11 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ void	exit_tile_check(t_data *data)
 {
 	if (data->ptr[data->player_possition[1]][data->player_possition[0]] \
 	== 'E' && data->collectible_nbr == 0)
-		printf("You win!\n");
+		end(data, 1);
 }
 
 void	do_tile_action(t_data *data)
@@ -106,7 +106,7 @@ void	check_trap_collision(t_data *data)
 			&& current->y == data->player_possition[1])
 		{
 			if ((current->frame / 10) % 9 == 7)
-				end();
+				end(data, 0);
 			else
 				break ;
 		}

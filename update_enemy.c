@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:21 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:46:22 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:28:46 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,7 +122,7 @@ void	update_enemy(t_data *data)
 		current->frame = (current->frame + 1) % 1001;
 		if (current->x == data->player_possition[0] \
 		&& current->y == data->player_possition[1])
-			end();
+			end(data, 2);
 		if (data->design_mode)
 			update_enemy_frame_chunck(data, current);
 		else

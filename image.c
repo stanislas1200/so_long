@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:05 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:53:01 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:44:13 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ void	load_image2(t_data *data)
 	i("./data/texture/outside/wall_solo.xpm", data);
 	data->img->outside_tiles[17] = i("./data/texture/outside/door.xpm", data);
 	data->img->exit_tile = i("./data/texture/other/portal.xpm", data);
-	data->img->exit_tile0 = i("./data/texture/other/portal_on0.xpm", data);
-	data->img->exit_tile1 = i("./data/texture/other/portal_on1.xpm", data);
-	data->img->exit_tile2 = i("./data/texture/other/portal_on2.xpm", data);
-	data->img->exit_tile3 = i("./data/texture/other/portal_on3.xpm", data);
+	data->img->exit_on[0] = i("./data/texture/other/portal_on0.xpm", data);
+	data->img->exit_on[1] = i("./data/texture/other/portal_on1.xpm", data);
+	data->img->exit_on[2] = i("./data/texture/other/portal_on2.xpm", data);
+	data->img->exit_on[3] = i("./data/texture/other/portal_on3.xpm", data);
 	data->img->unknown_tile = i("./data/texture/other/unknown_tile.xpm", data);
 	data->img->inside_tiles[15] = \
 	i("./data/texture/cave/cave_collectible0.xpm", data);

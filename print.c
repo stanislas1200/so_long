@@ -6,18 +6,11 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:45 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:46:46 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:38:51 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-void	end(void)
-{
-	printf("You lose!\n");
-	system("leaks so_long");
-	exit(0);
-}
 
 int	get_len(int nbr)
 {
@@ -52,6 +45,20 @@ char	*ft_itoa(int nbr)
 		nbr /= 10;
 	}
 	return (str);
+}
+
+void	end(t_data *data, int code)
+{
+	if (!code)
+		ft_printf("\x1b[1;31mGAME OVER\x1b[0m: Killed by a Trap!\n");
+	if (code == 2)
+		ft_printf("\x1b[1;31mGAME OVER\x1b[0m: Killed by a Enemy!\n");
+	else if (code == 1)
+		ft_printf("\x1b[1;32mYou Win\x1b[0m: With %d moves!\n", \
+		data->player_move_count);
+	free_all(data);
+	system("leaks so_long");
+	exit(0);
 }
 
 void	print_on_screen(t_data *data)

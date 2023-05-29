@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:48:44 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:43:53 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <mlx.h>
 # include <stdlib.h>
 # include "get_next_line.h"
+# include "ft_printf.h"
 # include <fcntl.h>
 
 # include <string.h>
@@ -27,10 +28,6 @@ typedef struct s_img
 	int		img_height;
 	void	**exit_on[4];
 	void	*exit_tile;
-	void	*exit_tile0;
-	void	*exit_tile1;
-	void	*exit_tile2;
-	void	*exit_tile3;
 	void	*unknown_tile;
 	void	*outside_tiles[18];
 	void	*floor;
@@ -177,7 +174,7 @@ void	check_trap_collision(t_data *data);
 void	print_on_screen(t_data *data);
 void	load_image(t_data *data);
 int		update_frame(t_data *data);
-void	end(void);
+void	end(t_data *data, int code);
 void	*get_tile(t_data *data, char tile);
 void	update_trap(t_data *data);
 void	update_enemy(t_data *data);

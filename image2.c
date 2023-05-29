@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:47:46 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:54:51 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:44:11 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,6 @@ void	load_image6(t_data *data)
 {
 	data->img->trap[7] = i("./data/texture/trap4.xpm", data);
 	data->img->trap[8] = i("./data/texture/trap5.xpm", data);
-	data->img->exit_on[0] = i("./data/texture/other/portal_on0.xpm", data);
-	data->img->exit_on[1] = i("./data/texture/other/portal_on1.xpm", data);
-	data->img->exit_on[2] = i("./data/texture/other/portal_on2.xpm", data);
-	data->img->exit_on[3] = i("./data/texture/other/portal_on3.xpm", data);
 }
 
 void	load_image5(t_data *data)

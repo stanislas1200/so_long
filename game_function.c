@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 17:00:24 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:36:15 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,4 +127,3 @@ void	start_game(t_data *data)
 	mlx_loop_hook(data->mlx, update_frame, data);
 	mlx_loop(data->mlx);
 }
-// need no flame on exit 

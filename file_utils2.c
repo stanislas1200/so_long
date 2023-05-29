@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/25 13:27:02 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/28 12:53:02 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:07:16 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ int	find_file(char **path, char **new_path, int *free_path)
 				break ;
 			else
 			{
-				printf("\x1b[1;31mError\x1b[0m: Map file must be \
+				ft_printf("\x1b[1;31mError\x1b[0m: Map file must be \
 a\x1b[1;35m .ber\x1b[0m file\n");
 				return (-2);
 			}
