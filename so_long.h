@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 13:43:53 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 13:55:03 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,62 +30,14 @@ typedef struct s_img
 	void	*exit_tile;
 	void	*unknown_tile;
 	void	*outside_tiles[18];
-	void	*floor;
-	void	*wall_floor;
-	void	*wall_otop_corner_left;
-	void	*wall_otop_corner_right;
-	void	*wall_odown_corner_left;
-	void	*wall_odown_corner_right;
-	void	*wall_itop_corner_left;
-	void	*wall_itop_corner_right;
-	void	*wall_idown_corner_left;
-	void	*wall_idown_corner_right;
-	void	*wall_left;
-	void	*wall_right;
-	void	*wall_down;
-	void	*wall_top;
-	void	*wall_solo;
-	void	*door;
 	void	*collectible0;
 	void	*collectible1;
 	void	*inside_tiles[18];
-	void	*cave_floor;
-	void	*cave_wall_floor;
-	void	*cave_wall_otop_corner_left;
-	void	*cave_wall_otop_corner_right;
-	void	*cave_wall_odown_corner_left;
-	void	*cave_wall_odown_corner_right;
-	void	*cave_wall_itop_corner_left;
-	void	*cave_wall_itop_corner_right;
-	void	*cave_wall_idown_corner_left;
-	void	*cave_wall_idown_corner_right;
-	void	*cave_wall_left;
-	void	*cave_wall_right;
-	void	*cave_wall_down;
-	void	*cave_wall_top;
-	void	*cave_wall_solo;
-	void	*cave_door;
 	void	*cave_collectible0;
 	void	*cave_collectible1;
 	void	**trap[9];
 	void	**player[5][5];
 	void	**enemy[5][5];
-	void	*player_up_0;
-	void	*player_up_1;
-	void	*player_up_2;
-	void	*player_up_3;
-	void	*player_down_0;
-	void	*player_down_1;
-	void	*player_down_2;
-	void	*player_down_3;
-	void	*player_left_0;
-	void	*player_left_1;
-	void	*player_left_2;
-	void	*player_left_3;
-	void	*player_right_0;
-	void	*player_right_1;
-	void	*player_right_2;
-	void	*player_right_3;
 }	t_img;
 
 typedef struct s_trap
