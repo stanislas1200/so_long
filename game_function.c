@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 13:36:15 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 15:58:19 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,17 +69,28 @@ void	*get_tile(t_data *data, char tile)
 		return (get_tile_helper(data, tile));
 }
 
-void	setting_mlx(t_data *data)
+int	setting_mlx(t_data *data)
 {
 	if (data->map_height > 28 || data->map_width > 50)
 		data->design_mode = 1;
 	data->mlx = mlx_init();
+	if (!data->mlx)
+		return (0);
 	if (data->design_mode)
+	{
 		data->win = mlx_new_window(data->mlx, 1000, 500, \
 		"The Mysterious Firefly Cave");
+		if (!data->win)
+			return (0);
+	}
 	else
+	{
 		data->win = mlx_new_window(data->mlx, 50 * data->map_width, 50 * \
 		data->map_height, "The Mysterious Firefly Cave");
+		if (!data->win)
+			return (0);
+	}
+	return (1);
 }
 
 int	key_press(int keycode, t_data *data)
@@ -108,9 +119,8 @@ void	start_game(t_data *data)
 	== 'P')
 		data->cave = 0;
 	data->img = malloc(sizeof(t_img));
-	if (!data->img)
+	if (!data->img || !setting_mlx(data))
 		return ;
-	setting_mlx(data);
 	load_image(data);
 	if (data->cave)
 	{

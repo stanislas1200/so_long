@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 13:55:03 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 16:01:46 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,18 +26,14 @@ typedef struct s_img
 {
 	int		img_width;
 	int		img_height;
-	void	**exit_on[4];
-	void	*exit_tile;
-	void	*unknown_tile;
 	void	*outside_tiles[18];
-	void	*collectible0;
-	void	*collectible1;
 	void	*inside_tiles[18];
-	void	*cave_collectible0;
-	void	*cave_collectible1;
 	void	**trap[9];
-	void	**player[5][5];
-	void	**enemy[5][5];
+	void	**exit_on[4];
+	void	**player[4][4];
+	void	**enemy[4][4];
+	void	*unknown_tile;
+	void	*exit_tile;
 }	t_img;
 
 typedef struct s_trap
@@ -94,6 +90,7 @@ typedef struct s_data
 	t_node	*stack;
 	int		i;
 	int		j;
+	int		img_loaded;
 }	t_data;
 
 void	pg(char **map, int *start, int *end, t_data *data);
@@ -133,5 +130,6 @@ void	update_enemy(t_data *data);
 int		update_frame(t_data *data);
 void	*i(char *str, t_data *data);
 void	load_image5(t_data *data);
+void	destroy_image(t_data *data);
 
 #endif

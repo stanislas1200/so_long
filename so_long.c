@@ -6,16 +6,11 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:20 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 13:42:14 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 15:58:35 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "so_long.h"
-
-void	destroy_image(t_data *data)
-{
-	mlx_destroy_image(data->mlx, data->img->trap[0]);
-}
 
 void	free_more2(t_data *data)
 {
@@ -28,7 +23,11 @@ void	free_more2(t_data *data)
 		free(tmp);
 	}
 	if (data->win)
+	{
+		mlx_clear_window(data->mlx, data->win);
 		mlx_destroy_window(data->mlx, data->win);
+		data->mlx = NULL;
+	}
 	if (data->mlx)
 		free(data->mlx);
 	if (data)
@@ -47,7 +46,8 @@ void	free_more(t_data *data)
 		if (data->map_cave)
 			free(data->map_cave);
 	}
-	destroy_image(data);
+	if (data->img_loaded)
+		destroy_image(data);
 	if (data->img)
 		free(data->img);
 	while (data->trap_list)
@@ -90,6 +90,8 @@ void	data_setup(t_data *data)
 	data->img = NULL;
 	data->trap_list = NULL;
 	data->enemy_list = NULL;
+	data->mlx = NULL;
+	data->win = NULL;
 	data->cave = 0;
 	data->player_nbr = 0;
 	data->exit_nbr = 0;
@@ -103,6 +105,7 @@ void	data_setup(t_data *data)
 	data->direction = 0;
 	data->time = 0;
 	data->design_mode = 0;
+	data->img_loaded = 0;
 }
 
 int	main(int ac, char **av)

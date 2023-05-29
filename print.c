@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:45 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 13:38:51 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/29 16:00:46 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	end(t_data *data, int code)
 		ft_printf("\x1b[1;32mYou Win\x1b[0m: With %d moves!\n", \
 		data->player_move_count);
 	free_all(data);
-	system("leaks so_long");
 	exit(0);
 }
 
