@@ -18,19 +18,17 @@ void	destroy_image_helper(t_data *data)
 
 	i = -1;
 	while (++i < 4)
+	{
+		mlx_destroy_image(data->mlx, data->img->exit_on[i]);
+		mlx_destroy_image(data->mlx, data->img->player[1][i]);
+		mlx_destroy_image(data->mlx, data->img->player[2][i]);
+		mlx_destroy_image(data->mlx, data->img->player[0][i]);
 		mlx_destroy_image(data->mlx, data->img->player[3][i]);
-	i = -1;
-	while (++i < 4)
 		mlx_destroy_image(data->mlx, data->img->enemy[0][i]);
-	i = -1;
-	while (++i < 4)
 		mlx_destroy_image(data->mlx, data->img->enemy[1][i]);
-	i = -1;
-	while (++i < 4)
 		mlx_destroy_image(data->mlx, data->img->enemy[2][i]);
-	i = -1;
-	while (++i < 4)
 		mlx_destroy_image(data->mlx, data->img->enemy[3][i]);
+	}
 	mlx_destroy_image(data->mlx, data->img->unknown_tile);
 	mlx_destroy_image(data->mlx, data->img->exit_tile);
 }
@@ -41,25 +39,17 @@ void	destroy_image(t_data *data)
 
 	i = -1;
 	while (++i < 18)
+	{
 		mlx_destroy_image(data->mlx, data->img->outside_tiles[i]);
-	i = -1;
-	while (++i < 18)
 		mlx_destroy_image(data->mlx, data->img->inside_tiles[i]);
+	}
 	i = -1;
 	while (++i < 9)
 		mlx_destroy_image(data->mlx, data->img->trap[i]);
-	i = -1;
-	while (++i < 4)
-		mlx_destroy_image(data->mlx, data->img->exit_on[i]);
-	i = -1;
-	while (++i < 4)
-		mlx_destroy_image(data->mlx, data->img->player[0][i]);
-	i = -1;
-	while (++i < 4)
-		mlx_destroy_image(data->mlx, data->img->player[1][i]);
-	i = -1;
-	while (++i < 4)
-		mlx_destroy_image(data->mlx, data->img->player[2][i]);
+	mlx_destroy_image(data->mlx, data->img->gui[0]);
+	mlx_destroy_image(data->mlx, data->img->gui[1]);
+	mlx_destroy_image(data->mlx, data->img->bar[0]);
+	mlx_destroy_image(data->mlx, data->img->bar[1]);
 	destroy_image_helper(data);
 }
 
