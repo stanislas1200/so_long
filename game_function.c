@@ -95,6 +95,8 @@ int	setting_mlx(t_data *data)
 
 int	key_press(int keycode, t_data *data)
 {
+	if (keycode == 27)
+		end(data, 3);
 	mlx_put_image_to_window(data->mlx, data->win, \
 	get_tile(data,
 			data->ptr[data->player_possition[1]][data->player_possition[0]]),

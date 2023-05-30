@@ -56,6 +56,8 @@ void	end(t_data *data, int code)
 	else if (code == 1)
 		ft_printf("\x1b[1;32mYou Win\x1b[0m: With %d moves!\n", \
 		data->player_move_count);
+	else if (code == 3)
+		ft_printf("\x1b[1;33mGAME CLOSED\x1b[0m\n");
 	free_all(data);
 	exit(0);
 }
