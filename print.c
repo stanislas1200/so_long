@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:45 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/30 17:04:13 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 18:21:13 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,12 @@ char	*ft_itoa(int nbr)
 		nbr /= 10;
 	}
 	return (str);
+}
+
+int	close_game(t_data *data)
+{
+	end(data, 3);
+	return (0);
 }
 
 void	end(t_data *data, int code)

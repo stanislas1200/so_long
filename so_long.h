@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/30 16:27:34 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 18:19:59 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,5 +135,6 @@ int		update_frame(t_data *data);
 void	*i(char *str, t_data *data);
 void	load_image5(t_data *data);
 void	destroy_image(t_data *data);
+int		close_game(t_data *data);
 
 #endif
