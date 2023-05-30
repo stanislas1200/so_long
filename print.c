@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:45 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/30 16:38:03 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:04:13 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ void	end(t_data *data, int code)
 	else if (code == 3)
 		ft_printf("\x1b[1;33mGAME CLOSED\x1b[0m\n");
 	free_all(data);
-	system("leaks so_long");
 	exit(0);
 }
 

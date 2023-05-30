@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:47:24 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:59:11 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 17:04:20 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	move_player2(int keycode, t_data *data, char **map)
 
 	x = data->player_possition[0];
 	y = data->player_possition[1];
-	if (keycode == 12 || keycode == 123)
+	if (keycode == 0 || keycode == 123)
 	{
 		data->direction = 2;
 		if (map[y][x - 1] != '1' && map[y][x - 1] != '#')
@@ -54,7 +54,7 @@ void	move_player(int keycode, t_data *data, char **map)
 	}
 	else
 		move_player2(keycode, data, map);
-	if (keycode == 2 || keycode == 12 || keycode == 1 || keycode == 13 \
+	if (keycode == 2 || keycode == 0 || keycode == 1 || keycode == 13 \
 	|| keycode == 124 || keycode == 123 || keycode == 125 || keycode == 126)
 		data->player_move_count++;
 }
