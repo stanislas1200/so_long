@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/26 14:59:33 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 16:01:46 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:27:34 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ typedef struct s_img
 	void	**enemy[4][4];
 	void	*unknown_tile;
 	void	*exit_tile;
-	void	gui[2];
-	void	bar[2];
+	void	*gui[2];
+	void	*bar[2];
 }	t_img;
 
 typedef struct s_trap

@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:45 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 16:00:46 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:38:03 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ void	end(t_data *data, int code)
 	else if (code == 3)
 		ft_printf("\x1b[1;33mGAME CLOSED\x1b[0m\n");
 	free_all(data);
+	system("leaks so_long");
 	exit(0);
 }
 
@@ -78,11 +79,15 @@ void	print_on_screen(t_data *data)
 				get_tile(data, data->ptr[0][i]), i * 50, 0);
 	}
 	mlx_string_put(data->mlx, data->win, 5, 10, 136, "Move Count: ");
-	mlx_string_put(data->mlx, data->win, 160, \
-	10, 136, move);
+	if (move)
+	{
+		mlx_string_put(data->mlx, data->win, 160, 10, 136, move);
+		free(move);
+	}
 	mlx_string_put(data->mlx, data->win, 5, 25, 136, "Collected left: ");
-	mlx_string_put(data->mlx, data->win, 160, \
-	25, 136, nbr);
-	free(move);
-	free(nbr);
+	if (nbr)
+	{
+		mlx_string_put(data->mlx, data->win, 160, 25, 136, nbr);
+		free(nbr);
+	}
 }

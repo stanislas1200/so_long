@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/29 12:46:17 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 12:46:18 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:29:34 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,19 +16,19 @@ void	update_gui(t_data *data)
 {
 	int	i;
 
-	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[0], 0, \
-	(data->map_width - 2) * 50);
-	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[1], 0, \
-	(data->map_width - 1) * 50);
+	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[0], \
+	(data->map_width - 2) * 50, 0);
+	mlx_put_image_to_window(data->mlx, data->win, data->img->gui[1], \
+	(data->map_width - 1) * 50, 0);
 	i = -1;
-	while (++i < data->hp)
-		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[0], 0, \
-		(data->map_width - 1) * 50 + i * 4);
+	while (++i < data->player_hp)
+		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[0], \
+		(data->map_width - 1) * 50 + i * 4, 0);
 	i = -1;
 	while (++i < (data->time / 100) % 8)
-		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[1], 0, \
-		(data->map_width - 1) * 50 + i * 4);
-	if (data->hp < data->player_max_hp && data->time 899)
+		mlx_put_image_to_window(data->mlx, data->win, data->img->bar[1], \
+		(data->map_width - 1) * 50 + i * 4, 0);
+	if (data->player_hp < data->player_max_hp && data->time == 899)
 		data->player_hp++;
 }
 

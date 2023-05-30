@@ -6,7 +6,7 @@
 /*   By: sgodin <sgodin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/10 14:46:39 by sgodin            #+#    #+#             */
-/*   Updated: 2023/05/29 15:58:19 by sgodin           ###   ########.fr       */
+/*   Updated: 2023/05/30 16:33:46 by sgodin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int	setting_mlx(t_data *data)
 
 int	key_press(int keycode, t_data *data)
 {
-	if (keycode == 27)
+	if (keycode == 53)
 		end(data, 3);
 	mlx_put_image_to_window(data->mlx, data->win, \
 	get_tile(data,
